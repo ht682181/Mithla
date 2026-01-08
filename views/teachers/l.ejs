@@ -1,0 +1,67 @@
+<%- layout("/layouts/boilerplateTeacher") -%>
+
+<div class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-7 col-sm-10">
+      
+      <!-- Card -->
+      <div class="card shadow-lg rounded-4 p-4">
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <h3 class="fw-bold text-primary">📝 Attendance Login</h3>
+            <p class="text-muted">Select your class, semester & section to mark attendance</p>
+          </div>
+
+          <!-- Form -->
+          <form id="loginForm" action="/add/student/attendance/" method="post" class="needs-validation" novalidate>
+
+            <!-- Class -->
+            <div class="mb-3">
+              <label for="class" class="form-label fw-bold">Class</label>
+              <select name="data[class]" id="class" class="form-select" required>
+                <option value="">-- Choose Class & Year --</option>
+                <% if (classData.class && classData.class.length > 0) { %>
+                  <% for (let cls of classData.class) { %>
+                    <option value="<%= cls.className %>"><%= cls.className %></option>
+                  <% } %>
+                <% } %>
+              </select>
+              <div class="invalid-feedback">Please select a class</div>
+            </div>
+
+            <!-- Semester -->
+            <div class="mb-3">
+              <label for="semester" class="form-label fw-bold">Semester</label>
+              <input name="data[semester]" class="form-control" id="semester" placeholder="Enter semester" required list="semesterOptions">
+              <datalist id="semesterOptions">
+                <% for(let i=1; i<=8; i++){ %>
+                  <option value="<%= i %>"></option>
+                <% } %>
+              </datalist>
+              <div class="invalid-feedback">Please enter a semester</div>
+            </div>
+
+            <!-- Section -->
+            <div class="mb-3">
+              <label for="section" class="form-label fw-bold">Section</label>
+              <select name="data[section]" id="section" class="form-select" required>
+                <option value="">-- Choose Section --</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+              </select>
+              <div class="invalid-feedback">Please select a section</div>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary col-6 py-2 rounded-3 shadow-sm">Login</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

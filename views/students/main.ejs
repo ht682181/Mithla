@@ -1,0 +1,68 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+<div class="container mt-3">
+
+  <!-- Welcome Section -->
+  <div class="card shadow-lg text-center p-5 mb-5" style="border-radius: 20px; background: linear-gradient(135deg, #6a11cb, #2575fc); color: white;">
+    <h1 class="fw-bold mb-2">Welcome, <%= student.name %>!</h1>
+    <!-- <p class="mb-1 fs-5">Class: <%= student.class %> | Section: <%= student.section %> | Semester: <%= student.semester %></p>
+    <p class="fs-6">Roll No: <%= student.rollNo %></p> -->
+  </div>
+
+  <!-- Quick Action Cards -->
+  <div class="row g-4">
+
+    <!-- Attendance -->
+    <div class="col-md-4">
+      <div class="card shadow-lg h-100 border-0" style="border-radius: 20px; transition: transform 0.3s; cursor: pointer; background: linear-gradient(135deg, #1d8cf8, #3358f4);">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-calendar-check-fill fs-1 mb-3"></i>
+          <h4 class="fw-bold mb-2">Attendance</h4>
+          <p class="mb-3">View your attendance records</p>
+          <a href="/student/attendance/status/check" class="btn btn-light rounded-pill px-4 shadow-sm">Go</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subjects -->
+    <div class="col-md-4">
+      <div class="card shadow-lg h-100 border-0" style="border-radius: 20px; transition: transform 0.3s; cursor: pointer; background: linear-gradient(135deg, #00f2c3, #009975);">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-book-fill fs-1 mb-3"></i>
+          <h4 class="fw-bold mb-2">Subjects</h4>
+          <p class="mb-3">Check all your enrolled subjects</p>
+          <a href="/student/attendance/subject/check" class="btn btn-light rounded-pill px-4 shadow-sm">Go</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="col-md-4">
+      <div class="card shadow-lg h-100 border-0" style="border-radius: 20px; transition: transform 0.3s; cursor: pointer; background: linear-gradient(135deg, #ff8d72, #ff3d00);">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-person-fill fs-1 mb-3"></i>
+          <h4 class="fw-bold mb-2">Profile</h4>
+          <p class="mb-3">Update your profile information</p>
+          <a href="/profile" class="btn btn-light rounded-pill px-4 shadow-sm">Go</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<style>
+  /* Hover animation for cards */
+  .card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  }
+
+  /* Smooth transition for buttons */
+  .btn-light:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+  }
+</style>

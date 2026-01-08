@@ -1,0 +1,152 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+<div class="container mt-4">
+  <div class="card shadow p-4">
+
+    <h3 class="mb-3 text-center">Attendance Report for <%= student.name %></h3>
+         
+     <div class="text-center my-5">
+    <h3 class="fw-bold text-secondary mb-3">Year search by session</h3>
+    <div class="d-flex justify-content-center">
+      <input type="text" name="search" class="form-control w-50 me-2 rounded-pill shadow-sm" placeholder="Search by name..." required>
+      <button type="submit" class="btn btn-dark rounded-pill px-4 shadow-sm">Search</button>
+    </div>
+  </div>
+
+
+    <!-- Filter Buttons -->
+    <div class="mb-3 d-flex justify-content-center gap-2">
+      <button class="btn btn-outline-primary filter-btn" data-filter="all">All</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="monthly">Monthly</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="weekly">Weekly</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="today">Currently</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="row text-center mb-4 mt-3">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5>Total Days</h5>
+            <h3 id="totalDays">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5>Present Days</h5>
+            <h3 id="presentDays">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-danger text-white">
+          <div class="card-body">
+            <h5>Absent Days</h5>
+            <h3 id="absentDays">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <h4 class="mb-3">Detailed Status</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Period</th>
+            <th>Unit</th>
+            <th>Topic</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceTableBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const studentId = "<%= student._id %>";
+
+  async function fetchAttendance(filter) {
+    try {
+      const res = await fetch(`/attendance/${studentId}/${filter}`);
+      const data = await res.json();
+
+      // ✅ Day-wise summary calculation
+      const dayMap = new Map();
+      data.data.forEach(att => {
+        const dateKey = new Date(att.date).toDateString();
+        if (!dayMap.has(dateKey)) {
+          dayMap.set(dateKey, []);
+        }
+        dayMap.get(dateKey).push(att.status);
+      });
+
+      let totalDays = dayMap.size;
+      let presentDays = 0;
+      let absentDays = 0;
+
+      dayMap.forEach(statuses => {
+        if (statuses.includes("Present")) {
+          presentDays++;
+        } else {
+          absentDays++;
+        }
+      });
+
+      // ✅ Update summary
+      document.getElementById("totalDays").textContent = totalDays;
+      document.getElementById("presentDays").textContent = presentDays;
+      document.getElementById("absentDays").textContent = absentDays;
+
+      // ✅ Table update with badges
+      const tbody = document.getElementById("attendanceTableBody");
+      tbody.innerHTML = "";
+      data.data.forEach(att => {
+        let dateObj = new Date(att.date);
+        let dateStr = isNaN(dateObj) ? "-" : dateObj.toLocaleDateString();
+
+        // Status badge
+        let statusBadge = "";
+        if(att.status === "Present") {
+          statusBadge = `<span class="badge bg-success">${att.status}</span>`;
+        } else if(att.status === "Absent") {
+          statusBadge = `<span class="badge bg-danger">${att.status}</span>`;
+        } else {
+          statusBadge = `<span class="badge bg-secondary">${att.status || "-"}</span>`;
+        }
+
+        const row = `
+          <tr>
+            <td>${dateStr}</td>
+            <td>${statusBadge}</td>
+            <td>${att.periods || "-"}</td>
+            <td>${att.unit || "-"}</td>
+            <td>${att.description || "-"}</td>
+          </tr>`;
+        tbody.insertAdjacentHTML("beforeend", row);
+      });
+
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  }
+
+  // Default load = All data
+  fetchAttendance("all");
+
+  // Filter button listeners
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      fetchAttendance(btn.dataset.filter);
+    });
+  });
+</script>
+
+

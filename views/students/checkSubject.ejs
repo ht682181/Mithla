@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplateStudent") -%>
+
+<div class="container mt-3">
+  <div class="row justify-content-center g-4">
+    <% if (student.subject && student.subject.length > 0) { %>
+      <% student.subject.forEach((sub, i) => { %>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card shadow-lg border-0 rounded-4 h-100 subject-card">
+            <div class="card-body text-center p-4">
+              <div class="subject-icon mb-3" style="background: linear-gradient(135deg, #6a11cb, #2575fc);">
+                <i class="bi bi-journal-text fs-1 text-white"></i>
+              </div>
+              <h5 class="card-title fw-bold text-dark"><%= sub.name %></h5>
+              <p class="text-muted small mb-1">Code: <%= sub.code %></p>
+              <p class="text-muted small mb-1">Max Marks: <%= sub.maxMarks %></p>
+              <p class="text-muted small mb-1">Min Marks: <%= sub.minMarks %></p>
+              <p class="small">
+                Subject Type: 
+                <% if(sub.subjectType){ %>
+                  <% if(sub.subjectType.toLowerCase() === 'theory'){ %>
+                    <span class="badge bg-primary">Theory</span>
+                  <% } else if(sub.subjectType.toLowerCase() === 'practical'){ %>
+                    <span class="badge bg-success">Practical</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary"><%= sub.subjectType %></span>
+                  <% } %>
+                <% } else { %>
+                  <span class="badge bg-secondary">N/A</span>
+                <% } %>
+              </p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="text-center text-muted">No subjects assigned</p>
+    <% } %>
+  </div>
+</div>
+
+<style>
+  .subject-card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+    background: #ffffff;
+  }
+  .subject-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0px 20px 40px rgba(0,0,0,0.2);
+  }
+  .subject-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    transition: transform 0.3s;
+  }
+  .subject-card:hover .subject-icon {
+    transform: scale(1.1);
+  }
+</style>

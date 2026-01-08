@@ -1,0 +1,73 @@
+ <% layout("/layouts/boilerplate") -%>
+
+ <div class="container my-2">
+
+   <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary"> 📘 Subejct Management</h2>
+    <p class="text-muted">Add, Search & Manage Subject Information</p>
+  </div>
+
+<div class="card shadow-lg border-0 rounded-4 p-4 bg-body-tertiary">
+  <div class="text-center mt-2">
+    <h3 class="fw-bold text-secondary mb-3">🔍 Search Subject</h3>
+    <form action="/search/subject" method="POST" class="d-flex justify-content-center">
+      <input type="text" name="search" class="form-control w-50 me-2 rounded-pill shadow-sm" placeholder="Search by name..." required>
+      <button type="submit" class="btn btn-dark rounded-pill px-4 shadow-sm">Search</button>
+    </form>
+  </div>
+  </div>
+
+  <a href= "/add/subjectData" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-5 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Add Subject
+</a>
+
+  <div class="card shadow-lg border-0 rounded-4 mt-5">
+    <div class="card-header bg-dark text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">📋 Subject Details</h4>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+          <thead class="table-primary">
+            <tr>
+              <th>Name</th>
+              <th>Code</th>
+              <th>Course</th>
+               <th>Semester</th>
+              <th>MaxMarks</th>
+              <th>MinMarks</th>
+               <th>SubjectType</th>
+               <th>Edit</th>
+               <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let data of datas) { %>
+              <tr>
+                <td><%= data.name %></td>
+                <td><%= data.code %></td>
+                <td><%= data.course %></td>
+                  <td><%= data.semester %></td>
+                    <td><%= data.maxMarks %></td>
+                      <td><%= data.minMarks %></td>
+                        <td><%= data.subjectType %></td>
+                <td>
+                  <a href="/edit/subject/<%= data._id %>" class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-pen"></i></a>
+                </td>
+                <td>
+                  <form action="/delete/subject/<%= data._id %>?_method=Delete" method="post" style="display:inline;">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

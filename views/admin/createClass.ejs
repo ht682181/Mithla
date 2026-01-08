@@ -1,0 +1,95 @@
+<% layout("/layouts/boilerplate") -%>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-lg-5 mx-auto login-box p-4">
+
+<form action="/add/class" method="post" novalidate class="needs-validation">
+    <div class="text-center">
+    <h4 class="fw-bold">Add Class</h4>
+    </div>
+    
+      <div class="">
+  <label for="courseYear" class="form-label">Select class & Year</label>
+  <input id="courseYear" name="data[class]" class="form-control shadow-sm" required placeholder="Enter the class" list="classList">
+  <datalist id="classList">
+
+  <!-- B.TECH -->
+   <option value="B.TECH CSE 1ST YEAR"></option>
+  <option value="B.TECH CSE 2ND YEAR"></option>
+  <option value="B.TECH CSE 3RD YEAR"></option>
+  <option value="B.TECH CSE 4TH YEAR"></option>
+    <option value="B.TECH EEE 1ST YEAR"></option>
+
+
+  <!-- BCA -->
+  <option value="BCA 1ST YEAR"></option>
+  <option value="BCA 2ND YEAR"></option>
+  <option value="BCA 3RD YEAR"></option>
+
+  <!-- BBA -->
+  <option value="BBA 1ST YEAR"></option>
+  <option value="BBA 2ND YEAR"></option>
+  <option value="BBA 3RD YEAR"></option>
+
+  <!-- B.SC -->
+  <option value="B.SC 1ST YEAR"></option>
+  <option value="B.SC 2ND YEAR"></option>
+  <option value="B.SC 3RD YEAR"></option>
+
+  <!-- M.SC -->
+  <option value="M.SC 1ST YEAR"></option>
+  <option value="M.SC 2ND YEAR"></option>
+
+  <!-- MCA -->
+  <option value="MCA 1ST YEAR"></option>
+  <option value="MCA 2ND YEAR"></option>
+
+  <!-- MBA -->
+  <option value="MBA 1ST YEAR"></option>
+  <option value="MBA 2ND YEAR"></option>
+
+  <!-- DIPLOMA -->
+  <option value="DIPLOMA 1ST YEAR"></option>
+  <option value="DIPLOMA 2ND YEAR"></option>
+  <option value="DIPLOMA 3RD YEAR"></option>
+
+  <!-- BA -->
+  <option value="BA 1ST YEAR"></option>
+  <option value="BA 2ND YEAR"></option>
+  <option value="BA 3RD YEAR"></option>
+
+  <!-- MA -->
+  <option value="MA 1ST YEAR"></option>
+  <option value="MA 2ND YEAR"></option>
+
+  <!-- ITI -->
+  <option value="ITI 1ST YEAR"></option>
+  <option value="ITI 2ND YEAR"></option>
+
+  <!-- POLYTECHNIC -->
+  <option value="POLYTECHNIC 1ST YEAR"></option>
+  <option value="POLYTECHNIC 2ND YEAR"></option>
+  <option value="POLYTECHNIC 3RD YEAR"></option>
+
+</datalist>
+    
+                  <div class="invalid-feedback">Enter Valid class</div>
+               </div>
+
+                <!-- Format Message -->
+        <p class="text-success mt-3" style="font-weight:bold">
+          Format: B.TECH CSE 1ST YEAR | BCA 2ND YEAR | DIPLOMA 1ST YEAR | B.SC 1ST YEAR  ...
+          WRITE IN UPPERCASE
+        </p>
+               
+   
+
+    <div class="text-center mt-3">
+    <button class="col-6 btn btn-primary">Submit</button>
+    </div>
+</form>
+
+
+        </div>
+    </div>
+</div>

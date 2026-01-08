@@ -1,0 +1,169 @@
+<% layout("/layouts/boilerplate") -%> 
+
+<div class="container"> 
+  
+  
+  
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-primary">👩‍🏫 Assigning Student Management</h1>
+    </div>
+
+     <a href= "/add/studentData" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-2 mb-0 ms-5"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Add Student
+</a>
+ <a href= "/show/student" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 m-4"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Show Student Data
+</a>
+
+  <div class="row mt-3">     
+    <div class="col-lg-10 mx-auto login-box p-4">       
+      <form action="/assign/student/subject" method="post" novalidate class="needs-validation">         
+        <div class="text-center">           
+          <h4 class="fw-bold">Assign Subjects to Students</h4>         
+        </div>                                
+
+        <!-- Class -->
+        <div class="mb-2 mt-3">   
+          <label for="class" class="form-label">Class</label>   
+          <select name="data[class]" class="form-control" id="class" required>     
+            <option value="">Choose class & year</option>     
+            <% for(let data of classData){ %>       
+              <option value="<%= data.class %>"><%= data.class %></option>     
+            <% } %>   
+          </select> 
+        </div>  
+
+        <!-- Semester -->
+        <div class="mb-2">   
+          <label for="semester" class="form-label">Semester</label>   
+          <input name="data[semester]" class="form-control" id="semester" placeholder="Enter semester" required list="option">   
+          <datalist id="option">      
+            <% for(let i=1; i<=8; i++){ %>       
+              <option value="<%= i %>"></option>     
+            <% } %>   
+          </datalist> 
+        </div>  
+
+        <!-- Subject -->
+        <div class="mb-2 mt-3">   
+          <label class="form-label">Subjects</label>   
+          <div id="subject-container" class="border rounded p-2" style="max-height:200px; overflow-y:auto;"></div>   
+          <div class="form-check mt-2">     
+            <input type="checkbox" id="selectAllSubjects" class="form-check-input">     
+            <label for="selectAllSubjects" class="form-check-label">Select All Subjects</label>   
+          </div> 
+        </div>  
+
+        <!-- Students -->
+        <div class="mb-2 mt-3">   
+          <label class="form-label">Students</label>   
+          <div class="d-flex fw-bold border-bottom mb-2 p-1">
+            <div class="col-6">Name</div>
+            <div class="col-6">Father Name</div>
+          </div>
+          <div id="student-container" class="border rounded p-2" style="max-height:200px; overflow-y:auto;"></div>   
+          <div class="form-check mt-2">     
+            <input type="checkbox" id="selectAllStudents" class="form-check-input">     
+            <label for="selectAllStudents" class="form-check-label">Select All Students</label>   
+          </div> 
+        </div>          
+
+        <div class="text-center mt-3">           
+          <button class="col-6 btn btn-primary">Submit</button>         
+        </div>       
+      </form>     
+    </div>   
+  </div> 
+</div>  
+
+<script>   
+async function loadData() {     
+  let className = document.getElementById("class").value;     
+  let semester = document.getElementById("semester").value;      
+  if (!className || !semester) return;      
+
+  try {       
+    // Subjects       
+    let resSub = await fetch(`/get-subjects/${className}/${semester}`);       
+    let subjects = await resSub.json();        
+
+    let subContainer = document.getElementById("subject-container");       
+    subContainer.innerHTML = "";        
+
+    subjects.forEach((sub, i) => {         
+      let div = document.createElement("div");         
+      div.classList.add("form-check");         
+
+      let subjectData = JSON.stringify({
+        name: sub.name,
+        code: sub.code,
+        maxMarks: sub.maxMarks,
+        minMarks: sub.minMarks,
+        subjectType: sub.subjectType
+      });
+
+      div.innerHTML = `           
+        <input class="form-check-input subject-checkbox"                   
+               type="checkbox"                   
+               name="data[subjects][]"                   
+               value='${subjectData}'                   
+               id="subject${i}">           
+        <label class="form-check-label" for="subject${i}">
+          ${sub.name} (code:${sub.code}, Max: ${sub.maxMarks}, Min: ${sub.minMarks}, Type: ${sub.subjectType})
+        </label>         
+      `;         
+      subContainer.appendChild(div);       
+    });        
+
+    // Students       
+    let resStu = await fetch(`/get-students/${className}/${semester}`);       
+    let students = await resStu.json();        
+
+    let stuContainer = document.getElementById("student-container");       
+    stuContainer.innerHTML = "";        
+
+    students.forEach((stu, i) => {         
+      let div = document.createElement("div");         
+      div.classList.add("form-check", "d-flex", "align-items-center", "border-bottom", "py-1");         
+      div.innerHTML = `           
+        <input class="form-check-input student-checkbox me-2"                   
+               type="checkbox"                   
+               name="data[students][]"                   
+               value="${stu._id}"                   
+               id="student${i}">           
+        <label class="form-check-label w-100 d-flex justify-content-between" for="student${i}">
+          <span class="col-6">${stu.name}</span>
+          <span class="col-6">${stu.fatherName}</span>
+        </label>         
+      `;         
+      stuContainer.appendChild(div);       
+    });      
+
+  } catch (err) {       
+    console.error("Error fetching data", err);     
+  }   
+}    
+
+document.getElementById("class").addEventListener("change", loadData);   
+document.getElementById("semester").addEventListener("change", loadData);    
+
+document.getElementById("selectAllSubjects").addEventListener("change", function() {     
+  document.querySelectorAll(".subject-checkbox").forEach(cb => cb.checked = this.checked);   
+});    
+
+document.getElementById("selectAllStudents").addEventListener("change", function() {     
+  document.querySelectorAll(".student-checkbox").forEach(cb => cb.checked = this.checked);   
+});    
+
+document.querySelector("form").addEventListener("submit", function(e) {     
+  if(document.querySelectorAll(".subject-checkbox:checked").length === 0 || 
+     document.querySelectorAll(".student-checkbox:checked").length === 0) {       
+    e.preventDefault();       
+    alert("Please select at least one subject and one student!");     
+  }   
+});  
+</script>

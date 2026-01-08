@@ -1,0 +1,138 @@
+<% layout("/layouts/boilerplate") -%>
+
+
+
+  <div class="container my-2">
+
+
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-primary">👩‍🏫 Assigning Teacher Management</h1>
+      <p class="text-muted">Assigning class & subject to Teacher</p>
+    </div>
+
+    <a href="/add/teacherData"
+      class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 m-3"
+      style="transition:0.3s; font-size:15px;">
+      <i class="fa-solid fa-plus"></i> Add Teacher
+    </a>
+
+    
+<a href= "/show/teacher" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 m-4"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Show Teacher Data
+</a>
+
+    <div class="card shadow-lg border-0 rounded-4 bg-light-glass mb-5">
+      <div class="card-header bg-primary text-white rounded-top-4">
+        <h5 class="mb-0 fw-bold text-center">Assingning Subject, Class, Semester, Section To Teacher</h5>
+      </div>
+      <div class="card-body p-4">
+
+        <form action="/assign/teacher/subject/class" method="post" novalidate class="needs-validation">
+
+
+          <!-- Teacher Username -->
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="username" class="form-label">Teacher Username</label>
+              <select name="data[username]" class="form-control shadow-sm" id="username" required>
+                <option value="">Choose Teacher username</option>
+                <% for(let tData of teacherData){ %>
+                  <option value="<%= tData.username %>">
+                    <%= tData.username %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+
+            <!-- Class -->
+            <div class="col-md-6">
+              <label for="class" class="form-label">Class</label>
+              <br>
+              <select name="data[className]" class="form-control shadow-sm" id="class" required>
+                <option value="">Choose class & year</option>
+                <% for(let data of classData){ %>
+                  <option value="<%= data.class %>">
+                    <%= data.class %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+
+
+
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" for="semester">Semester</label>
+              <select name="data[semester]" class="form-select shadow-sm" id="semester" required>
+                <option value="">Choose semester</option>
+                <% for(let i=1; i<=8; i++){ %>
+                  <option value="<%= i %>">
+                    <%= i %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" for="section">Section</label>
+              <select name="data[section]" class="form-select shadow-sm" id="section" required>
+                <option value="">Choose section</option>
+                <option>A</option>
+                <option>B</option>
+              </select>
+            </div>
+
+
+            <div class="col-md-6">
+              <label for="subject" class="form-label">Subject</label>
+              <input name="data[subject]" class="form-control shadow-sm" id="subject" placeholder="Enter subject"
+                required list="subject-option">
+              <datalist id="subject-option"></datalist>
+            </div>
+
+
+
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary px-5 py-2 rounded-pill shadow-lg">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JS Code -->
+ <script>
+  document.getElementById("class").addEventListener("change", loadSubjects);
+  document.getElementById("semester").addEventListener("change", loadSubjects);
+
+  async function loadSubjects() {
+    let className = document.getElementById("class").value;
+    let semester = document.getElementById("semester").value;
+
+    // Dono select hone chahiye
+    if (!className || !semester) return;
+
+    try {
+      let res = await fetch(`/get-subjects/${className}/${semester}`);
+      let subjects = await res.json();
+
+      let dataList = document.getElementById("subject-option");
+      dataList.innerHTML = ""; // clear old items
+
+      subjects.forEach(sub => {
+        let option = document.createElement("option");
+        option.value = sub.name;
+        dataList.appendChild(option);
+      });
+
+    } catch (err) {
+      console.error("Error fetching subjects", err);
+    }
+  }
+</script>
