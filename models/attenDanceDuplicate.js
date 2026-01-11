@@ -31,8 +31,8 @@ const AttendenceSchema = new Schema({
   ],
 });
 
-// 🔥 Auto delete document after 24 hours
-AttendenceSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+// 🔥 Auto delete document after 8 hours
+AttendenceSchema.index({ createdAt: 1 }, { expireAfterSeconds: 28800 });
 
 const AttendenceDuplicate = mongoose.model("AttendenceDuplicate", AttendenceSchema);
 module.exports = AttendenceDuplicate;
