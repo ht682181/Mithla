@@ -1266,7 +1266,7 @@ app.post(
 
     if (!data.class || !data.semester || !data.section) {
       req.flash("error", "Class, semester, or section not found ");
-      return res.redirect("/show/record/today/attendance/login");
+      return res.redirect("/show/status/today/attendance");
     }
 
     const datas = await Student.find({
@@ -1276,8 +1276,8 @@ app.post(
     });
 
     if (datas.length === 0) {
-      req.flash("error", "No record found  something is wrong");
-      return res.redirect("/show/record/today/attendance/login");
+      req.flash("error", "No students datas found");
+      return res.redirect("/show/status/today/attendance");
     }
 
     let dupDatas = await AttendenceDuplicate.find().populate({
@@ -1479,7 +1479,7 @@ app.post(
 
     if (!className || !semester || !section) {
       req.flash("error", "Class, semester, or section not found");
-      return res.redirect("/show/record/today/attendance/login");
+      return res.redirect("/show/allStudent/status");
     }
 
     // ===== STUDENTS =====
@@ -1490,8 +1490,8 @@ app.post(
     });
 
     if (!students.length) {
-      req.flash("error", "No students found");
-      return res.redirect("back");
+      req.flash("error", "No student datas found");
+      return res.redirect("/show/allStudent/status");
     }
 
     const studentIds = students.map((s) => s._id);
@@ -1752,7 +1752,7 @@ app.get(
     let y = doc.y;
     doc.fontSize(10).font("Helvetica-Bold");
 
-    doc.text("Admin.No", 40, y);
+    doc.text("Adm.no", 40, y);
     doc.text("Name", 80, y);
     doc.text("P Days", 230, y);
     doc.text("T Days", 280, y);
