@@ -11,7 +11,7 @@
 
   <div class="card shadow-lg border-0 rounded-4 mt-4">
     <div class="card-header bg-dark text-white rounded-top-4">
-      <h4 class="mb-0 fw-bold text-center">📋 Teacher Class or Semester and Subject or Section Details</h4>
+      <h5 class="mb-0 fw-bold text-center">📋 Class, Semester,Subject or Section Details of <%= datas.name %></h5>
     </div>
 
     <div class="card-body">
@@ -54,7 +54,7 @@
          <form action="/delete/teacher/class/<%= cls._id %>/semester/<%= sem._id %>/section/<%= sec._id %>?_method=DELETE"
       method="POST">
   <button class="btn btn-danger btn-sm">
-    Delete Section
+    Delete 
   </button>
 </form>
 
