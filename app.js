@@ -1797,6 +1797,22 @@ app.get(
 
 ///////////////////////////// teachers folders starts///////////////////////////////////////////////////////////////////
 
+
+// login  teacher
+
+app.post(
+  "/login/modal",
+
+  passport.authenticate("local", {
+    failureRedirect: "/student/attendance/login",
+    failureFlash: true,
+  }),
+  async (req, res) => {
+    req.flash("success", "Login Successfully");
+    res.redirect("/teacher/student/attendance");
+  }
+);
+
 // teacher profile
 
 app.get(
@@ -1849,20 +1865,20 @@ app.get(
   })
 );
 
-// login  teacher
 
-app.post(
-  "/login/modal",
+// show subject class section details
 
-  passport.authenticate("local", {
-    failureRedirect: "/student/attendance/login",
-    failureFlash: true,
-  }),
-  async (req, res) => {
-    req.flash("success", "Login Successfully");
-    res.redirect("/teacher/student/attendance");
-  }
+app.get(
+  "/show/teacher/class/subject/:id",
+  isLoggedIn,
+  WrapAsync(async (req, res) => {
+    let { id } = req.params;
+    req.session.teacherId = id;
+    let datas = await Teacher.findById(id);
+    res.render("teachers/showClassSubjectAndothers.ejs", { datas });
+  })
 );
+
 
 // take attendance
 
