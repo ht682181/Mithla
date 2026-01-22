@@ -272,7 +272,7 @@ app.post(
         // ================= SEND OTP =================
         try {
           const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
-          console.log("OTP Email Sent:", result.messageId);
+          // console.log("OTP Email Sent:", result.messageId);
         } catch (mailErr) {
           console.error("Brevo Mail Error:", mailErr);
           req.flash("error", "OTP sending failed");
