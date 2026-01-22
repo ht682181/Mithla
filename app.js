@@ -180,7 +180,6 @@ app.get("/student/attendance/login", (req, res) => {
 });
 
 
-
 app.post(
   "/student/attendance/login",
   WrapAsync(async (req, res) => {
