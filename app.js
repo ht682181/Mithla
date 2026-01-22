@@ -180,11 +180,14 @@ app.get("/student/attendance/login", (req, res) => {
 });
 
 
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+
 app.post(
   "/student/attendance/login",
   WrapAsync(async (req, res) => {
     try {
       const { role, username, password } = req.body;
+
       const studentPassword = process.env.STUDENT_PASSWORD;
       const adminUsername = process.env.ADMIN_USERNAME;
       const adminPassword = process.env.ADMIN_PASSWORD;
@@ -194,7 +197,7 @@ app.post(
 
       req.session.adminVerified = false;
 
-      // ===== Admin Login =====
+      // ================= ADMIN LOGIN =================
       if (adminRole === role) {
         if (adminUsername === username && adminPassword === password) {
           req.session.adminVerified = true;
@@ -206,12 +209,12 @@ app.post(
         }
       }
 
-      // ===== Teacher Login =====
+      // ================= TEACHER LOGIN =================
       if (teacherRole === role) {
-        return res.redirect(307, "/login/modal"); // preserves POST body
+        return res.redirect(307, "/login/modal");
       }
 
-      // ===== Student Login =====
+      // ================= STUDENT LOGIN =================
       if (studentRole === role && studentPassword === password) {
         const newStudent = await Student.findOne({ rollNo: username });
 
@@ -223,7 +226,7 @@ app.post(
         req.session.rollNo = username;
         req.session.otpVerified = false;
 
-        // ===== OTP Generate =====
+        // ================= OTP GENERATE =================
         let otp = "";
         for (let i = 0; i < 6; i++) {
           otp += Math.floor(Math.random() * 10);
@@ -232,49 +235,54 @@ app.post(
         const newOtp = new OTP({
           userId: newStudent._id,
           otp,
+          createdAt: new Date()
         });
+
         await newOtp.save();
 
-        // ===== SEND EMAIL (FIXED) =====
-        const transporter = nodemailer.createTransport({
-          service: "gmail", // instead of host/port
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS, // Gmail APP PASSWORD
-          },
-          connectionTimeout: 15000,
-          greetingTimeout: 15000,
-          socketTimeout: 15000,
-        });
+        // ================= BREVO API SETUP =================
+        const client = SibApiV3Sdk.ApiClient.instance;
+        const apiKey = client.authentications["api-key"];
+        apiKey.apiKey = process.env.BREVO_API_KEY;
 
-        // SMTP debug
-        transporter.verify((err, success) => {
-          if (err) {
-            console.log("SMTP ERROR ❌", err);
-          } else {
-            console.log("SMTP READY ✅");
+        const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+        const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+        sendSmtpEmail.subject = "Attendance Verification Code";
+        sendSmtpEmail.htmlContent = `
+          <h2>Attendance OTP</h2>
+          <p>Your verification code is:</p>
+          <h1 style="letter-spacing:5px;">${otp}</h1>
+          <p>This OTP is valid for 30 seconds.</p>
+        `;
+
+        sendSmtpEmail.sender = {
+          name: "Attendance System",
+          email:process.env.EMAIL_USER// ⚠️ MUST be verified in Brevo
+        };
+
+        sendSmtpEmail.to = [
+          {
+            email: newStudent.email,
+            name: newStudent.name || "Student"
           }
-        });
+        ];
 
-        await transporter.sendMail({
-          from: `"Attendance System" <${process.env.EMAIL_USER}>`,
-          to: newStudent.email,
-          subject: "Attendance Verification Code",
-          text: `Dear Student,
-
-Your verification code is: ${otp}
-
-Please enter it within 30 seconds.
-Do not share this code with anyone.
-
-Regards,
-Attendance System`,
-        });
+        // ================= SEND OTP =================
+        try {
+          const result = await tranEmailApi.sendTransacEmail(sendSmtpEmail);
+          console.log("OTP Email Sent:", result.messageId);
+        } catch (mailErr) {
+          console.error("Brevo Mail Error:", mailErr);
+          req.flash("error", "OTP sending failed");
+          return res.redirect("/student/attendance/login");
+        }
 
         return res.redirect("/otp");
       }
 
-      // ===== Invalid Role =====
+      // ================= INVALID ROLE =================
       req.flash("error", "Role not matched");
       return res.redirect("/student/attendance/login");
 
