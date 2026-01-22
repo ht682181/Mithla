@@ -223,7 +223,7 @@ app.post(
         req.session.rollNo = username;
         req.session.otpVerified = false;
 
-        // Generate OTP
+        // ===== OTP Generate =====
         let otp = "";
         for (let i = 0; i < 6; i++) {
           otp += Math.floor(Math.random() * 10);
@@ -235,22 +235,40 @@ app.post(
         });
         await newOtp.save();
 
-        // Send email
+        // ===== SEND EMAIL (FIXED) =====
         const transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,
+          service: "gmail", // instead of host/port
           auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
+            pass: process.env.EMAIL_PASS, // Gmail APP PASSWORD
           },
+          connectionTimeout: 15000,
+          greetingTimeout: 15000,
+          socketTimeout: 15000,
+        });
+
+        // SMTP debug
+        transporter.verify((err, success) => {
+          if (err) {
+            console.log("SMTP ERROR ❌", err);
+          } else {
+            console.log("SMTP READY ✅");
+          }
         });
 
         await transporter.sendMail({
-          from: process.env.EMAIL_USER,
+          from: `"Attendance System" <${process.env.EMAIL_USER}>`,
           to: newStudent.email,
           subject: "Attendance Verification Code",
-          text: `Dear Student,\nYour verification code is ${otp}. Please enter it within 30 seconds. Keep it confidential.`,
+          text: `Dear Student,
+
+Your verification code is: ${otp}
+
+Please enter it within 30 seconds.
+Do not share this code with anyone.
+
+Regards,
+Attendance System`,
         });
 
         return res.redirect("/otp");
@@ -267,6 +285,7 @@ app.post(
     }
   })
 );
+
 
 //  admin main route
 
