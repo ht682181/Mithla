@@ -25,6 +25,7 @@
       "express": "^5.1.0",
       "express-session": "^1.18.2",
       "flash": "^1.1.0",
+      "joi": "^18.0.2",
       "method-override": "^3.0.0",
       "mongodb": "^6.8.0",
       "mongoose": "^8.6.0",
@@ -34,7 +35,7 @@
       "passport": "^0.7.0",
       "passport-local": "^1.0.0",
       "passport-local-mongoose": "^8.0.0",
-      "pdfkit": "^0.17.2"
+      "pdfkit": "^0.17.2",
       "sib-api-v3-sdk": "^8.5.0"
    }
 }
