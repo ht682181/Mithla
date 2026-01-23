@@ -2678,7 +2678,7 @@ app.get(
       req.flash("error", "Something went wrong");
       return res.redirect("/student/attendance");
     }
-    res.render("students/showstatus.ejs", { student });
+    res.render("students/showStatus.ejs", { student });
   })
 );
 
