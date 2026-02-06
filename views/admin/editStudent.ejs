@@ -1,0 +1,111 @@
+<% layout("/layouts/boilerplate") -%>
+
+
+  <div class="container my-3">
+
+
+
+
+    <!-- Student Form Card -->
+    <div class="card shadow-lg border-0 rounded-4 bg-light-glass mb-5">
+      <div class="card-header bg-primary text-white rounded-top-4">
+        <h4 class="mb-0 fw-bold text-center">Edit Student Data</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" action="/edit/student/<%= id %>?_method=put" novalidate class="needs-validation"
+          id="passwordForm" enctype="multipart/form-data">
+
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Admin No</label>
+              <input placeholder="Enter Admin No" name="data[rollNo]" class="form-control shadow-sm"
+                value="<%= data.rollNo %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Name</label>
+              <input placeholder="Enter Name" name="data[name]" class="form-control shadow-sm" value="<%= data.name %>"
+                required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Father's Name</label>
+              <input placeholder="Enter Father's Name" name="data[fatherName]" class="form-control shadow-sm"
+                value="<%= data.fatherName %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Session</label>
+              <input placeholder="e.g. 2023-2026" name="data[session]" class="form-control shadow-sm"
+                value="<%= data.session %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Class & Year</label>
+              <select name="data[class]" class="form-control" id="courseYear" required>
+                <% for(let c of classData){ %>
+                  <option value="<%= c.class %>" <%=data && data.class===c.class ? "selected" : "" %>>
+                    <%= c.class %>
+                  </option>
+                  <% } %>
+              </select>
+
+
+
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Semester</label>
+              <select name="data[semester]" class="form-control" id="semester" required>
+                <% for(let i=1; i<=8; i++){ %>
+                  <option value="<%= i %>" <%=data.semester==i ? "selected" : "" %>><%= i %>
+                  </option>
+                  <% } %>
+              </select>
+
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Section</label>
+              <select name="data[section]" class="form-select shadow-sm" value="<%= data.section %>" required>
+                 <% for(let s of sectionData){ %>
+                  <option value="<%= s.name %>" <%=data && data.section===s.name ? "selected" : "" %>>
+                    <%= s.name %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+
+             <div class="col-md-6">
+            <label for="image" class="form-label fw-semibold">image</label>
+            <input type="file" id="image" name="data[image]" class="form-control shadow-sm" placeholder="Choose a image">
+          </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Email</label>
+              <input type="email" name="data[email]" class="form-control shadow-sm" placeholder="Enter Email"
+                value="<%= data.email %>" required>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button class="btn btn-gradient px-5 py-2 rounded-pill shadow-lg">Edit Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Custom CSS -->
+  <style>
+    .bg-light-glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(45deg, #0d6efd, #6610f2);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-gradient:hover {
+      opacity: 0.9;
+      color: #fff;
+    }
+  </style>

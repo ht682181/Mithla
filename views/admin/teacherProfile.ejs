@@ -1,0 +1,72 @@
+<% layout("/layouts/boilerplate") -%>
+<div class="container mt-2">
+  <div class="row">
+    <div class="col-lg-12 mx-auto">
+      <!-- Profile Card -->
+      <div class="card shadow-lg rounded-4 border-0">
+        <!-- Header / Cover -->
+        <div class="card-header p-0 position-relative" style="height:120px; background: linear-gradient(135deg, #6c63ff, #42a5f5); border-top-left-radius:16px; border-top-right-radius:16px;">
+          <div class="position-absolute top-50 start-50 translate-middle text-center">
+           <img src="<%= data.image.url %>"
+                 alt="Profile Picture" 
+                 class="rounded-circle border border-white" 
+                 width="120" 
+                 height="120" 
+                 style="object-fit: cover;">
+          </div>
+        </div>
+
+        <div class="card-body text-center mt-3">
+          <!-- Name & Username -->
+          <h3 class="fw-bold mb-3"><%= data.name %></h3>
+          <p class="mb-3"><strong class="me-2">Username:</strong><%= data.username %></p>
+          
+
+          <!-- Email and contact -->
+            <p class="mb-3"><strong  class="me-2">Mobile.no:</strong><%= data.mobile %></p>
+
+          <p class="mb-3"><strong  class="me-2">Gmail:</strong><i class="fa-solid fa-envelope me-2"></i> <%= data.email %></p>
+
+          <!-- Classes -->
+          <% if(data.class && data.class.length > 0){ %>
+            <div class="mb-2">
+              <strong>Classes:</strong>
+              <% data.class.forEach(cls => { %>
+                <span class="badge bg-primary mx-1 my-1"><%= cls.className %></span>
+              <% }) %>
+            </div>
+          <% } %>
+
+          <!-- Subjects -->
+          <% if(data.subject && data.subject.length > 0){ %>
+            <div class="mb-3">
+              <strong>Subjects:</strong>
+              <% data.subject.forEach(sub => { %>
+                <span class="badge bg-success mx-1 my-1"><%= sub %></span>
+              <% }) %>
+            </div>
+          <% } %>
+
+          <!-- Edit Button -->
+          <a href="/edit/teacher/<%= data._id %>" class="btn btn-outline-primary btn-lg mt-3">
+            <i class="fa-solid fa-pen-to-square me-2"></i> Edit Profile
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Hover effect for badges */
+.badge:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}
+
+/* Card shadow hover */
+.card:hover {
+  transform: translateY(-20px);
+  transition: 0.3s;
+}
+</style>

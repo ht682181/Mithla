@@ -1,0 +1,76 @@
+<% layout("/layouts/boilerplate") -%>
+
+
+<style>
+.link{
+  text-decoration: none;
+}
+</style>
+<div class="container mt-2">
+  <h3 class="text-center fw-bold mb-4">📊 Dashboard</h3>
+  
+  <div class="row g-4">
+    
+    <!-- Teachers -->
+    <div class="col-md-4 col-sm-6">
+      <a href="/show/teacher" class="link">
+      <div class="card shadow-lg border-0 rounded-4 text-center p-4 bg-primary text-white">
+        <h5 class="fw-bold">👨‍🏫 Teachers</h5>
+        <% let teacherCount = teacherData.length; %>
+        <h2 class="display-5 fw-bold mt-2"><%= teacherCount %></h2>
+      </div>
+      </a>
+    </div>
+
+    <!-- Subjects -->
+    <div class="col-md-4 col-sm-6">
+        <a href="/show/subject" class="link">
+      <div class="card shadow-lg border-0 rounded-4 text-center p-4 bg-success text-white">
+        <h5 class="fw-bold">📘 Subjects</h5>
+        <% let subjectCount = subjectData.length; %>
+        <h2 class="display-5 fw-bold mt-2"><%= subjectCount %></h2>
+      </div>
+      </a>
+    </div>
+
+    <!-- Students -->
+    <div class="col-md-4 col-sm-6">
+        <a href="/show/student" class="link">
+      <div class="card shadow-lg border-0 rounded-4 text-center p-4 bg-warning text-dark">
+        <h5 class="fw-bold">🎓 Students</h5>
+        <% let studentCount = studentData.length; %>
+        <h2 class="display-5 fw-bold mt-2"><%= studentCount %></h2>
+      </div>
+      </a>
+    </div>
+
+    
+    <!-- Classes -->
+    <div class="col-md-4 col-sm-6">
+        <a href="/show/class" class="link">
+      <div class="card shadow-lg border-0 rounded-4 text-center p-4 bg-danger text-white">
+        <h5 class="fw-bold">🏫 Classes</h5>
+        <% let classCount = classData.length; %>
+        <h2 class="display-5 fw-bold mt-2"><%= classCount %></h2>
+      </div>
+      </a>
+    </div>
+
+     <!-- Section-->
+<div class="col-md-4 col-sm-6">
+  <a href="/show/section" class="link">
+    <div class="card shadow-lg border-0 rounded-4 text-center p-4 bg-primary text-white">
+      <h5 class="fw-bold">📚 Sections</h5>
+
+      <% let sectionCount = sectionData.length; %>
+
+      <h2 class="display-5 fw-bold mt-2">
+        <%= sectionCount %>
+      </h2>
+    </div>
+  </a>
+</div>
+
+
+  </div>
+</div>

@@ -1,0 +1,201 @@
+<%- layout("/layouts/boilerplate") -%>
+
+<div class="container mt-4">
+  <div class="card shadow-lg rounded-4 p-4">
+
+    <!-- ================= HEADER ================= -->
+    <div class="text-center mb-4">
+      <h3 class="fw-bold">
+        Attendance Date :
+        <span class="text-primary">
+          <%= today.toISOString().split("T")[0] %>
+        </span>
+      </h3>
+    </div>
+
+    <!-- ================= CLASS INFO ================= -->
+    <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+      <span class="badge bg-primary fs-6">Class : <%= students[0].class %></span>
+      <span class="badge bg-success fs-6">Semester : <%= students[0].semester %></span>
+      <span class="badge bg-warning text-dark fs-6">Section : <%= students[0].section %></span>
+    </div>
+
+
+    <!-- ================= DOWNLOAD PDF ================= -->
+<div class="text-center mb-4">
+  <form action="/show/today/status/attendance/date/pdf" method="POST">
+    <input type="hidden" name="date" value="<%= today.toISOString().split('T')[0] %>">
+    <button class="btn btn-danger rounded-pill px-4 shadow">
+      <i class="fa-solid fa-file-pdf"></i> Download PDF
+    </button>
+  </form>
+</div>
+
+    <!-- ================= DATE SEARCH ================= -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-body-tertiary">
+      <form
+        action="/show/today/status/attendance/date"
+        method="POST"
+        class="row justify-content-center g-3"
+      >
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Select Date</label>
+          <input
+            type="date"
+            name="data[date]"
+            class="form-control rounded-pill"
+            required
+          />
+        </div>
+
+        <div class="col-md-2 d-grid align-items-end">
+          <button class="btn btn-dark rounded-pill">
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ================= SUMMARY LOGIC ================= -->
+    <%
+      const attendedStudentSet = new Set(
+        attendance.map(a => a.studentId._id.toString())
+      );
+
+      const presentSet = new Set(
+        attendance
+          .filter(a => a.status === "Present")
+          .map(a => a.studentId._id.toString())
+      );
+
+      const isAttendanceTaken = attendance.length > 0;
+    %>
+
+    <% if(!isAttendanceTaken){ %>
+      <div class="alert alert-warning text-center fw-semibold">
+        ⚠️ Attendance not taken for this date
+      </div>
+    <% } %>
+
+    <!-- ================= SUMMARY CARDS ================= -->
+    <div class="row text-center mb-4">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white shadow rounded-4">
+          <div class="card-body">
+            <h6>Total Students</h6>
+            <h3><%= students.length %></h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-success text-white shadow rounded-4">
+          <div class="card-body">
+            <h6>Present Students</h6>
+            <h3><%= isAttendanceTaken ? presentSet.size : 0 %></h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card bg-danger text-white shadow rounded-4">
+          <div class="card-body">
+            <h6>Absent Students</h6>
+            <h3>
+              <%= isAttendanceTaken
+                ? (attendedStudentSet.size - presentSet.size)
+                : 0 %>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TABLE ================= -->
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Roll No</th>
+            <th class="text-start">Name</th>
+            <th class="text-start">Father Name</th>
+            <th>I</th>
+            <th>II</th>
+            <th>III</th>
+            <th>IV</th>
+            <th>V</th>
+            <th>VI</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% students.forEach(stu => { %>
+            <tr>
+              <td><%= stu.rollNo %></td>
+              <td class="text-start"><%= stu.name %></td>
+              <td class="text-start"><%= stu.fatherName %></td>
+
+              <% for(let p = 1; p <= 6; p++){ 
+                const rec = attendance.find(a =>
+                  a.studentId._id.toString() === stu._id.toString() &&
+                  a.period === p
+                );
+              %>
+                <td>
+                  <% if(rec){ %>
+                    <span class="badge <%= rec.status === 'Present' ? 'bg-success' : 'bg-danger' %>">
+                      <%= rec.status === "Present" ? "P" : "A" %>
+                    </span>
+                  <% } else { %>
+                    <span class="text-muted">-</span>
+                  <% } %>
+                </td>
+              <% } %>
+            </tr>
+          <% }) %>
+
+          <!-- ===== TEACHER ROW ===== -->
+          <tr class="table-light fw-semibold">
+            <td colspan="3">Teacher</td>
+            <% for(let p = 1; p <= 6; p++){ 
+              const rec = attendance.find(a => a.period === p);
+            %>
+              <td><%= rec?.teacherName || "-" %></td>
+            <% } %>
+          </tr>
+
+          <!-- ===== SUBJECT ROW ===== -->
+          <tr class="table-light fw-semibold">
+            <td colspan="3">Subject</td>
+            <% for(let p = 1; p <= 6; p++){ 
+              const rec = attendance.find(a => a.period === p);
+            %>
+              <td><%= rec?.subject || "-" %></td>
+            <% } %>
+          </tr>
+
+          <!-- ===== UNIT ROW ===== -->
+          <tr class="table-light">
+            <td colspan="3">Unit</td>
+            <% for(let p = 1; p <= 6; p++){ 
+              const rec = attendance.find(a => a.period === p);
+            %>
+              <td><%= rec?.unit || "-" %></td>
+            <% } %>
+          </tr>
+
+          <!-- ===== DESCRIPTION ROW ===== -->
+          <tr class="table-light">
+            <td colspan="3">Description</td>
+            <% for(let p = 1; p <= 6; p++){ 
+              const rec = attendance.find(a => a.period === p);
+            %>
+              <td class="small"><%= rec?.description || "-" %></td>
+            <% } %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

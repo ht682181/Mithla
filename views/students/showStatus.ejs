@@ -1,0 +1,174 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+<div class="container mt-4">
+  <div class="card shadow p-4 rounded-4">
+
+    <!-- ================= HEADER ================= -->
+    <h3 class="mb-3 text-center fw-bold">
+      📊 Attendance Report – <%= student.name %> --- (fatherName: <%= student.fatherName %>)
+    </h3>
+
+    <div class="container my-5 text-center">
+   
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <div>
+        Class: <span class="badge bg-primary fs-6"><%= student.class %></span>
+      </div>
+      <div>
+        Semester: <span class="badge bg-success fs-6"><%= student.semester %></span>
+      </div>
+      <div>
+        Section: <span class="badge bg-warning text-dark fs-6"><%= student.section %></span>
+      </div>
+    </div>
+</div>
+
+
+    <!-- ================= DATE RANGE SEARCH ================= -->
+    <div class="card shadow-sm border-0 rounded-4 p-4 bg-body-tertiary mb-4">
+      <div class="text-center mb-3">
+        <h5 class="fw-bold text-secondary">🔍 Search Attendance (Date Range)</h5>
+      </div>
+
+      <form action="/search/student/attendance/date" method="POST"
+        class="row justify-content-center g-3 needs-validation">
+
+        <div class="col-md-4">
+          <label class="form-label">From</label>
+          <input type="date" name="data[from]" class="form-control rounded-pill shadow-sm"
+            placeholder="dd/mm/yyyy" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">To</label>
+          <input type="date" name="data[to]" class="form-control rounded-pill shadow-sm"
+            placeholder="dd/mm/yyyy" required>
+        </div>
+
+        <div class="col-md-2 d-grid align-items-end">
+          <button class="btn btn-dark rounded-pill">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FILTER BUTTONS -->
+    <div class="mb-4 d-flex justify-content-center gap-2">
+      <button class="btn btn-outline-primary filter-btn" data-filter="all">All</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="monthly">Monthly</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="weekly">Weekly</button>
+      <button class="btn btn-outline-primary filter-btn" data-filter="today">Today</button>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="row text-center mb-4">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+          <div class="card-body">
+            <h6>Total Days</h6>
+            <h3 id="totalDays">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+          <div class="card-body">
+            <h6>Present Days</h6>
+            <h3 id="presentDays">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-danger text-white shadow">
+          <div class="card-body">
+            <h6>Absent Days</h6>
+            <h3 id="absentDays">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Period</th>
+            <th>Unit</th>
+            <th>Topic</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceTableBody">
+          <tr>
+            <td colspan="5">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+ <script>
+  const studentId = "<%= student._id %>";
+
+  async function fetchAttendance(filter) {
+    const res = await fetch(`/student/attendance/${studentId}/${filter}`);
+    const { data = [] } = await res.json();
+
+    const dayMap = new Map();
+
+    data.forEach(a => {
+      const day = new Date(a.date).toISOString().split("T")[0];
+      if (!dayMap.has(day)) dayMap.set(day, []);
+      dayMap.get(day).push(a.status);
+    });
+
+    let totalDays = dayMap.size;
+    let presentDays = 0;
+    let absentDays = 0;
+
+    dayMap.forEach(statuses => {
+      statuses.includes("Present") ? presentDays++ : absentDays++;
+    });
+
+    document.getElementById("totalDays").innerText = totalDays;
+    document.getElementById("presentDays").innerText = presentDays;
+    document.getElementById("absentDays").innerText = absentDays;
+
+    const tbody = document.getElementById("attendanceTableBody");
+    tbody.innerHTML = "";
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="5">No attendance found</td></tr>`;
+      return;
+    }
+
+    data.forEach(a => {
+      const date = new Date(a.date).toISOString().split("T")[0];
+      const badge =
+        a.status === "Present"
+          ? `<span class="badge bg-success">Present</span>`
+          : `<span class="badge bg-danger">Absent</span>`;
+
+      tbody.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${date}</td>
+          <td>${badge}</td>
+          <td>${a.period || "-"}</td>
+          <td>${a.unit || "-"}</td>
+          <td>${a.description || "-"}</td>
+        </tr>
+      `);
+    });
+  }
+
+  // default load
+  fetchAttendance("all");
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      fetchAttendance(btn.dataset.filter);
+    });
+  });
+</script>

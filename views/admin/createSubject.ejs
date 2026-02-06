@@ -1,0 +1,98 @@
+<% layout("/layouts/boilerplate") -%>
+  <div class="container my-2">
+
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary"> 📘 Add Subejct Management</h2>
+      <p class="text-muted">Add Manage Subject Information</p>
+    </div>
+
+    <a href="/show/subject"
+      class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 m-4"
+      style="transition:0.3s; font-size:15px;">
+      <i class="fa-solid fa-plus"></i> Show Subject Data
+    </a>
+
+    <!-- Student Form Card -->
+    <div class="card shadow-lg border-0 rounded-4 bg-light-glass mb-5">
+      <div class="card-header bg-primary text-white rounded-top-4">
+        <h4 class="mb-0 fw-bold text-center">Add Student Data</h4>
+      </div>
+      <div class="card-body p-4">
+
+
+        <form action="/add/subjectData" method="post" novalidate class="needs-validation">
+          <div class="row g-4">
+            <div class=" col-md-6">
+              <label for="name" class="form-label">Subject Name</label>
+              <input name="data[name]" class="form-control shadow-sm" id="name" placeholder="Enter  subject name"
+                required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="code" class="form-label">Code</label>
+              <input name="data[code]" class="form-control shadow-sm" id="code" placeholder="Enter the subject code"
+                required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="courseYear" class="form-label">Select Course & Year</label>
+              <select name="data[course]" class="form-control shadow-sm" id="courseYear" required>
+                <option value="">Choose class & year</option>
+                <% for(let data of classData){ %>
+                  <option value="<%= data.class %>">
+                    <%= data.class %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+
+
+
+            <div class="col-md-6">
+              <label for="semester" class="form-label">Semester</label>
+              <select id="semester" class="form-control shadow-sm" name="data[semester]" required>
+                <option value="">Choose semester</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+
+            </div>
+
+            <div class="col-md-6">
+              <label for="maxMarks" class="form-label">Maximum Marks</label>
+              <input name="data[maxMarks]" class="form-control shadow-sm" id="maxMarks" placeholder="Enter max marks"
+                required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="minMarks" class="form-label">Minimum Marks</label>
+              <input name="data[minMarks]" class="form-control shadow-sm" id="minMarks" placeholder="Enter min marks"
+                required>
+            </div>
+
+            <div class=" col-md-6 ">
+              <label for="subjectType" class="form-label">Subject Type</label>
+              <input name="data[subjectType]" class="form-control shadow-sm" id="subjectType"
+                placeholder="Enter subject type" required list="option">
+              <datalist id="option">
+                <option value="Theory">Theory</option>
+                <option value="Practical">Practical</option>
+              </datalist>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button class="btn btn-primary px-5 py-2 rounded-pill shadow-lg">📘 Save Subject</button>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>

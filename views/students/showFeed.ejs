@@ -1,0 +1,227 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+<style>
+  body { 
+    background: linear-gradient(135deg, #eef2ff, #f8fafc); 
+    font-family: 'Segoe UI', sans-serif; 
+  }
+
+  .main-wrap { 
+    min-height: 100vh; 
+    padding: 30px 10%; 
+  }
+
+  .feed-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 28px; 
+  }
+
+  .feed-item {
+    position: relative;
+    background: linear-gradient(180deg, #ffffff, #f9fafb);
+    border-radius: 22px;
+    padding: 26px 28px 28px 28px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+    word-break: break-word;
+    max-width: 100%;
+    border-left: 6px solid #3b82f6;
+    transition: all 0.3s ease;
+  }
+
+  .feed-item:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(59,130,246,0.18);
+  }
+
+  /* 🔥 Date Time Badge */
+  .feed-date {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1, #22d3ee);
+    box-shadow: 
+      0 0 8px rgba(59,130,246,0.6),
+      0 0 16px rgba(99,102,241,0.4);
+    animation: glow 2.5s infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 
+        0 0 6px rgba(59,130,246,0.5),
+        0 0 12px rgba(99,102,241,0.3);
+    }
+    to {
+      box-shadow: 
+        0 0 10px rgba(34,211,238,0.8),
+        0 0 22px rgba(99,102,241,0.6);
+    }
+  }
+
+  .feed-content {
+    font-size: 1.02rem;
+    color: #111827;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  /* scrollbar */
+  .feed-content::-webkit-scrollbar { width: 6px; }
+  .feed-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(#3b82f6,#6366f1);
+    border-radius: 10px;
+  }
+
+  /* 🗑 Delete Button */
+  .delete-btn{
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: linear-gradient(135deg,#ef4444,#dc2626);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 6px 14px rgba(239,68,68,0.4);
+    transition: all 0.25s ease;
+  }
+
+  .delete-btn:hover{
+    transform: scale(1.05);
+    box-shadow: 0 10px 22px rgba(239,68,68,0.6);
+    background: linear-gradient(135deg,#dc2626,#b91c1c);
+  }
+
+  .delete-btn:active{
+    transform: scale(0.95);
+  }
+
+  /* Pagination */
+  .pagination { 
+    margin-top: 35px; 
+    display: flex; 
+    justify-content: center; 
+    gap: 14px; 
+  }
+
+  .pagination a {
+    padding: 8px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#3b82f6,#6366f1);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(59,130,246,0.35);
+    transition: all 0.3s ease;
+  }
+
+  .pagination a:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(59,130,246,0.45);
+  }
+
+  .pagination a.disabled { 
+    background: #cbd5e1; 
+    box-shadow: none;
+    pointer-events: none; 
+  }
+  h1.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    color: #1e3a8a;
+    margin-bottom: 25px;
+  }
+
+   .soft-link{
+    display:inline-block;
+    padding:12px 36px;
+    border-radius:40px;
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#2563eb;
+    background: rgba(59,130,246,0.08);
+    border:1px solid rgba(59,130,246,0.25);
+    backdrop-filter: blur(6px);
+    transition:0.3s ease;
+  }
+
+  .soft-link:hover{
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    color:#fff;
+    box-shadow:0 10px 25px rgba(59,130,246,0.35);
+    transform: translateY(-2px) scale(1.03);
+  }
+
+</style>
+
+<div class="main-wrap">
+      <h1 class="page-title">Your Feeds</h1>
+
+         <div class="text-end mb-4">
+        <a href="/student/add/feed" class="soft-link">
+          📬  Add Feeds
+        </a>
+      </div>
+
+
+  <% if(feeds.length > 0) { %>
+    <div class="feed-container">
+      <% feeds.forEach(feed => { %>
+        <div class="feed-item">
+
+          <!-- 🗑 Delete Button -->
+          <form 
+  action="/student/feed/delete/<%= feed._id %>?_method=Delete" method="post">
+            <button type="submit" class="delete-btn">
+              🗑 Delete
+            </button>
+          </form>
+
+          <!-- 🔥 Glow Date Time -->
+          <div class="feed-date">
+            🕒 <%= feed.createdAt.toLocaleString() %>
+          </div>
+
+          <div class="feed-content"><%= feed.content %></div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <% if(page > 1){ %>
+        <a href="/student/show/feed?page=<%= page - 1 %>">⬅ Prev</a>
+      <% } else { %>
+        <a class="disabled">⬅ Prev</a>
+      <% } %>
+
+      <% if(page < totalPages){ %>
+        <a href="/student/show/feed?page=<%= page + 1 %>">Next ➡</a>
+      <% } else { %>
+        <a class="disabled">Next ➡</a>
+      <% } %>
+    </div>
+
+  <% } else { %>
+    <div style="text-align:center; color:#6b7280; font-size:1.1rem; margin-top:60px;">
+      📭 No feeds available.
+    </div>
+  <% } %>
+
+</div>

@@ -1,0 +1,183 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(120deg, #f2f6ff, #ffffff);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .main-wrap {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top Section */
+  .top-section {
+    padding: 60px 8%;
+    background: linear-gradient(120deg, #dbeafe, #eef2ff);
+    border-bottom: 1px solid #e0e7ff;
+  }
+
+  .welcome-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .top-section h1 {
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #1e3a8a;
+  }
+
+  .top-section p {
+    color: #475569;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .student-name {
+    color: #2563eb;
+    font-weight: 700;
+  }
+
+  /* Content Section */
+  .content-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 8%;
+  }
+
+  .form-area {
+    width: 100%;
+    max-width: 950px;
+  }
+
+  .no-outline-textarea {
+    width: 100%;
+    border-radius: 20px;
+    padding: 26px;
+    font-size: 1.05rem;
+    min-height: 220px;
+    border: 1px solid #dbeafe;
+    background: #ffffff;
+    color: #1f2937;
+    transition: 0.3s ease;
+  }
+
+  .no-outline-textarea::placeholder {
+    color: #94a3b8;
+  }
+
+  .no-outline-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.25rem rgba(59,130,246,0.15);
+    background: #ffffff;
+  }
+
+  .send-btn {
+    margin-top: 28px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border: none;
+    padding: 15px 70px;
+    border-radius: 50px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    transition: 0.3s ease;
+  }
+
+  .send-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(59,130,246,0.35);
+  }
+
+  /* Soft Link Button */
+  .soft-link{
+    display:inline-block;
+    padding:12px 36px;
+    border-radius:40px;
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#2563eb;
+    background: rgba(59,130,246,0.08);
+    border:1px solid rgba(59,130,246,0.25);
+    backdrop-filter: blur(6px);
+    transition:0.3s ease;
+  }
+
+  .soft-link:hover{
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    color:#fff;
+    box-shadow:0 10px 25px rgba(59,130,246,0.35);
+    transform: translateY(-2px) scale(1.03);
+  }
+
+</style>
+
+<div class="main-wrap">
+
+  <!-- TOP FULL WIDTH SECTION -->
+  <div class="top-section">
+    <div class="welcome-bar">
+      <div>
+        <h1>Add Feed</h1>
+        <p>Welcome, <span class="student-name"><%= student.name %></span> 👋</p>
+      </div>
+      <div style="font-weight:600; color:#1e40af;">
+        🎓 Your voice matters in improving services
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT FULL SCREEN SECTION -->
+  <div class="content-section">
+
+    <div class="form-area">
+
+      <!-- Soft Action Link (Top Position) -->
+      <div class="text-end mb-4">
+        <a href="/student/show/feed" class="soft-link">
+          📬 My Feeds
+        </a>
+      </div>
+
+      <form method="post" action="/student/add/feed/<%= student._id %>" novalidate class="needs-validation">
+
+        <label class="form-label fw-semibold mb-3" style="color:#1e293b;">
+          Share your message
+        </label>
+
+        <textarea 
+          class="form-control no-outline-textarea" 
+          placeholder="✍️ Start typing your message here..." 
+          name="data[content]" 
+          required></textarea>
+
+        <div class="invalid-feedback mt-2">
+          Please enter a message.
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="send-btn">
+            🚀 Send Message
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

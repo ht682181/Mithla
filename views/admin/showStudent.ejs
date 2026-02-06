@@ -1,0 +1,133 @@
+<% layout("/layouts/boilerplate") -%>
+  <div class="container my-3">
+
+ 
+
+    <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">🎓Student Management</h2>
+    <p class="text-muted">Add, Search & Manage Student Information</p>
+  </div>
+  
+  <a href= "/add/studentData" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-2 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Add Student
+</a>
+
+ <a href= "/assign/student/subject" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-2 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Assigning
+</a>
+
+
+  <!-- Student Table -->
+  <div class="card shadow-lg border-0 rounded-4 mt-5">
+    <div class="card-header bg-dark text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">📋 Student Details</h4>
+    </div>
+    <!-- ////// -->
+     
+    <div class="card shadow-lg border-0 rounded-4 p-4 bg-body-tertiary m-3">
+      <div class="text-center mb-4">
+        <h3 class="fw-bold text-secondary">
+          🔍 Search Student
+        </h3>
+        <p class="text-muted">Find Students by name and class </p>
+      </div>
+      <form action="/search/student" method="POST" novalidate class="row justify-content-center g-3 needs-validation">
+
+        <div class="col-lg-4">
+           <label for="class" class="form-label">Name</label>
+          <input type="text" name="data[name]" class="form-control  rounded-pill shadow-sm"
+            placeholder="Search by name..." required>
+        </div>
+        <div class="col-md-4">
+          <label for="class" class="form-label">Class</label>
+          <select name="data[class]" class="form-control  rounded-pill shadow-sm" id="class">
+            <option value="">Choose class & year</option>
+            <% for(let data of course){ %>
+              <option value="<%= data.class %>"><%= data.class %></option>
+            <% } %>
+          </select>
+        </div>
+       <div class="col-md-2 d-grid align-items-end">
+          <button class="btn btn-dark rounded-pill">Search</button>
+        </div>
+    </form>
+  </div>
+
+    <!--  -->
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+          <thead class="table-primary">
+            <tr>
+              <th>Admin No</th>
+              <th>Name</th>
+              <th>Father's Name</th>
+              <th>Class</th>
+              <th>Semester</th>
+              <th>Section</th>
+              <th>Subject</th>
+              <th>Session</th>
+              <th>Email</th>
+              <th>Action</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let data of datas) { %>
+              <tr>
+                <td>
+                  <%= data.rollNo %>
+                </td>
+                <td>
+                 <a href="/student/profile/<%= data._id %>" style="color: black; text-decoration: none;"><%= data.name %></a>
+                </td>
+                <td>
+                  <%= data.fatherName %>
+                </td>
+                <td>
+                  <%= data.class %>
+                </td>
+                <td>
+                  <%= data.semester %>
+                </td>
+                <td>
+                  <%= data.section %>
+                </td>
+
+                 <td>
+                 <a href="/show/student/subject/<%= data.rollNo %>" class="btn btn-sm btn-outline-secondary" style="color: black; text-decoration: none;">View</a>
+                </td>
+                 
+                <td>
+                  <%= data.session %>
+                </td>
+                <td>
+                  <%= data.email %>
+                </td>
+                <td>
+                  <a href="/edit/student/<%= data._id %>" class="btn btn-sm btn-outline-warning me-1"><i
+                      class="fa-solid fa-pen"></i></a>
+                  <form action="/delete/student/<%= data._id %>?_method=Delete" method="post" style="display:inline;">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </td>
+                <!-- <td>
+                  <form action="/student/status/<%= data.rollNo %>" method="get">
+                    <button class="btn btn-sm btn-outline-secondary">View</button>
+                  </form>
+                </td> -->
+                <td>
+                 <a href="/student/status/<%= data.rollNo %>" class="btn btn-sm btn-outline-secondary" style="color: black; text-decoration: none;">View</a>
+                </td>
+              </tr>
+              <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>

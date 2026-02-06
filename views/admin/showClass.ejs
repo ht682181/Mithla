@@ -1,0 +1,51 @@
+ <% layout("/layouts/boilerplate") -%>
+
+ <div class="container my-2">
+
+   <div class="text-center mb-2">
+    <h2 class="fw-bold text-primary"> 📘 Class Management</h2>
+    <!-- <p class="text-muted">Add, Search & Manage Class Information</p> -->
+  </div>
+
+    
+
+  <a href= "/add/class" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-5 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Add Class
+</a>
+
+  <div class="card shadow-lg border-0 rounded-4 mt-5">
+    <div class="card-header bg-dark text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">📋 Class Details</h4>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+          <thead class="table-primary">
+            <tr>
+              <th>Name</th>
+               <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let data of datas) { %>
+              <tr>
+                <td><%= data.class %></td>
+                
+                
+                <td>
+                  <form action="/delete/class/<%= data._id %>?_method=Delete" method="post" style="display:inline;">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

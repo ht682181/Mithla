@@ -1,0 +1,261 @@
+<% layout("/layouts/boilerplate") -%>
+
+<style>
+body{
+  background:#f4f7fb;
+  font-family:'Segoe UI', sans-serif;
+}
+.table-wrap{
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.06);
+  overflow:hidden;
+  margin:30px 4%;
+}
+.page-title{
+  font-size:1.8rem;
+  font-weight:800;
+  color:#1e3a8a;
+  margin:20px 4%;
+  letter-spacing:1px;
+}
+.filter-bar{
+  margin:0 4% 10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.compact-badge{
+  background:#e0f2fe;
+  color:#0369a1;
+  font-size:.75rem;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:20px;
+}
+.status-new{
+  background:#dc2626;
+  color:#fff;
+  font-size:.65rem;
+  font-weight:800;
+  padding:4px 10px;
+  border-radius:20px;
+}
+.status-read{
+  background:#e5e7eb;
+  color:#374151;
+  font-size:.65rem;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:20px;
+}
+.btn-view{
+  border:1px solid #2563eb;
+  background:#fff;
+  color:#2563eb;
+  padding:6px 14px;
+  font-size:.8rem;
+  border-radius:6px;
+  font-weight:700;
+}
+.btn-delete{
+  background:#dc2626;
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  font-size:.7rem;
+  border-radius:6px;
+  font-weight:700;
+}
+.btn-read{
+  background:#10b981;
+  color:#fff;
+  border:none;
+  padding:5px 10px;
+  font-size:.7rem;
+  border-radius:6px;
+  font-weight:700;
+  margin-left:6px;
+}
+#feedModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+}
+.modal-box{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  width:100%;
+  max-width:520px;
+}
+</style>
+
+<div class="page-title">📩 Admin Feedback System</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+
+  <a href="/admin/show/feed" class="btn btn-outline-secondary btn-sm">All</a>
+  <a href="/admin/show/feed?new=true" class="btn btn-outline-danger btn-sm">Only New</a>
+
+  <form action="/admin/show/feed" method="GET" class="d-flex gap-2 flex-wrap">
+
+    <% if (isNewFilter) { %>
+      <input type="hidden" name="new" value="true">
+    <% } %>
+
+    <select name="class" class="form-select form-select-sm shadow-sm" style="width:160px">
+      <option value="">All Classes</option>
+      <% classData.forEach(cls => { %>
+        <option value="<%= cls.class %>" <%= selectedClass===cls.class?'selected':'' %>>
+          <%= cls.class %>
+        </option>
+      <% }) %>
+    </select>
+
+    <input type="text"
+           name="name"
+           value="<%= searchName %>"
+           placeholder="Search Name"
+           class="form-control form-control-sm shadow-sm"
+           style="width:160px">
+
+    <button class="btn btn-sm btn-primary">Filter</button>
+  </form>
+
+</div>
+
+<div class="table-responsive shadow rounded mx-4">
+<table class="table table-hover align-middle mb-0 text-center">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Course</th>
+      <th>Sem</th>
+      <th>Status</th>
+      <th>Feed</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% feeds.forEach(feed=>{ %>
+    <tr>
+      <td><%= feed.studentId.name %></td>
+      <td><span class="compact-badge"><%= feed.studentId.class %></span></td>
+      <td><%= feed.studentId.semester %></td>
+      <td>
+        <% if(!feed.isRead){ %>
+          <span class="status-new">NEW</span>
+        <% } else { %>
+          <span class="status-read">READ</span>
+        <% } %>
+      </td>
+      <td>
+        <button class="btn-view" data-feed="<%= feed.content.replace(/"/g,'&quot;') %>">View</button>
+        <% if(!feed.isRead){ %>
+        <form action="/admin/feed/read/<%= feed._id %>" method="POST" style="display:inline">
+          <button class="btn-read">Mark Read</button>
+        </form>
+        <% } %>
+      </td>
+      <td>
+        <form action="/admin/feed/delete/<%= feed._id %>?_method=DELETE" method="POST">
+          <button class="btn-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+
+<!-- PAGINATION -->
+<% if(totalPages > 1) { %>
+<nav class="mt-4">
+  <ul class="pagination justify-content-center flex-wrap">
+
+    <% if(page > 1) { %>
+      <li class="page-item">
+        <a class="page-link" href="/admin/show/feed?page=<%= page-1 %><% if(isNewFilter){ %>&new=true<% } %><% if(selectedClass){ %>&class=<%= selectedClass %><% } %><% if(searchName){ %>&name=<%= searchName %><% } %>">Prev</a>
+      </li>
+    <% } %>
+
+    <% 
+      let startPages = 1;
+      let endPages = totalPages;
+      let pageArray = [];
+
+      if(totalPages <= 7) {
+        for(let i=1;i<=totalPages;i++) pageArray.push(i);
+      } else {
+        // first 2 pages
+        pageArray.push(1,2);
+
+        if(page > 4) pageArray.push('...');
+
+        // middle pages
+        let middleStart = Math.max(3, page-1);
+        let middleEnd = Math.min(totalPages-2, page+1);
+
+        for(let i=middleStart;i<=middleEnd;i++) pageArray.push(i);
+
+        if(page < totalPages-3) pageArray.push('...');
+
+        // last 2 pages
+        pageArray.push(totalPages-1, totalPages);
+      }
+    %>
+
+    <% pageArray.forEach(p => { %>
+      <% if(p === '...') { %>
+        <li class="page-item disabled"><span class="page-link">...</span></li>
+      <% } else { %>
+        <li class="page-item <%= page === p ? 'active' : '' %>">
+          <a class="page-link" href="/admin/show/feed?page=<%= p %><% if(isNewFilter){ %>&new=true<% } %><% if(selectedClass){ %>&class=<%= selectedClass %><% } %><% if(searchName){ %>&name=<%= searchName %><% } %>"><%= p %></a>
+        </li>
+      <% } %>
+    <% }) %>
+
+    <% if(page < totalPages) { %>
+      <li class="page-item">
+        <a class="page-link" href="/admin/show/feed?page=<%= page+1 %><% if(isNewFilter){ %>&new=true<% } %><% if(selectedClass){ %>&class=<%= selectedClass %><% } %><% if(searchName){ %>&name=<%= searchName %><% } %>">Next</a>
+      </li>
+    <% } %>
+
+  </ul>
+</nav>
+<% } %>
+
+
+<!-- GOTO PAGE -->
+<div class="d-flex justify-content-center mt-3 mb-3">
+  <form class="d-flex" action="/admin/show/feed">
+    <input type="number" name="page" class="form-control shadow-sm me-2" style="width:100px;" min="1" max="<%= totalPages %>" required>
+    <button class="btn btn-primary">Go</button>
+  </form>
+</div>
+
+<!-- MODAL -->
+<div id="feedModal">
+  <div class="modal-box">
+    <h5>📝 Student Feedback</h5>
+    <p id="modalText"></p>
+    <button class="btn btn-primary btn-sm mt-2" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.btn-view').forEach(b=>{
+  b.onclick=()=>{ 
+    modalText.innerText=b.dataset.feed;
+    feedModal.style.display="flex";
+  }
+});
+function closeModal(){ feedModal.style.display="none"; }
+</script>

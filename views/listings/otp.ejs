@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mithla | OTP Verification</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="website icon" type="png" href="/images/logo.png">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .otp-card {
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+
+    .otp-icon {
+      width: 70px;
+      height: 70px;
+      background: #0d6efd;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 10px;
+    }
+
+    .otp-input {
+      height: 48px;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 6px;
+      font-weight: bold;
+    }
+
+    .email-badge {
+      background: #e7f1ff;
+      color: #0d6efd;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-md-6">
+
+      <% if (error && error.length) { %>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <%= error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% } %>
+
+      <div class="otp-card p-4">
+        <div class="text-center">
+          <div class="otp-icon">🔐</div>
+          <h4 class="fw-bold mt-2">OTP Verification</h4>
+          <p class="text-muted mb-1">We’ve sent a one-time password to</p>
+
+          <% 
+            const [username, domain] = email.split("@");
+            const visible = username.slice(-4);
+            const masked = "*".repeat(Math.max(0, username.length - 4));
+            const maskedEmail = masked + visible + "@" + domain;
+          %>
+
+          <div class="email-badge"><%= maskedEmail %></div>
+        </div>
+
+        <form action="/verify-otp" method="post" class="needs-validation mt-4" novalidate>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Enter OTP</label>
+            <input 
+              type="text"
+              name="otp"
+              class="form-control otp-input shadow sm"
+              placeholder="••••••"
+              maxlength="6"
+              required
+            >
+            <div class="invalid-feedback">
+              Please enter OTP
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100 fw-semibold">
+            Verify OTP
+          </button>
+        </form>
+
+        <!-- TIMER -->
+        <div class="text-center mt-3">
+          <small class="text-muted">
+            OTP valid only for 
+            <span class="fw-semibold text-danger">
+              <span id="otpTimer">30</span> seconds
+            </span>
+          </small>
+        </div>
+
+        <!-- RESEND -->
+       <div class="text-center mt-2">
+  <a
+    href="/student/attendance/login"
+    id="resendLink"
+    class="text-decoration-none text-muted"
+    style="pointer-events: none; cursor: not-allowed;"
+  >
+    Resend OTP
+  </a>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
+<script>
+  let timeLeft = 30;
+  const timerEl = document.getElementById("otpTimer");
+  const resendLink = document.getElementById("resendLink");
+
+  const timer = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+
+      // enable link
+      resendLink.style.pointerEvents = "auto";
+      resendLink.style.cursor = "pointer";
+      resendLink.classList.remove("text-muted");
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<%- layout("/layouts/boilerplateStudent") -%>
+
+
+   <div class="container mt-4">
+  <div class="card shadow p-4">
+
+    <h3 class="mb-3 text-center fw-bold">
+      📊 Attendance Report – <%= student.name %> --- (fatherName: <%= student.fatherName %>)
+    </h3>
+
+    <div class="container my-5 text-center">
+   
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <div>
+        Class: <span class="badge bg-primary fs-6"><%= student.class %></span>
+      </div>
+      <div>
+        Semester: <span class="badge bg-success fs-6"><%= student.semester %></span>
+      </div>
+      <div>
+        Section: <span class="badge bg-warning text-dark fs-6"><%= student.section %></span>
+      </div>
+    </div>
+</div>
+
+
+    <!-- Summary -->
+    <div class="row text-center mb-4 mt-3">
+      <div class="col-md-4">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5>Total Days</h5>
+            <h3><%= total %></h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5>Present Days</h5>
+            <h3><%= present %></h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-danger text-white">
+          <div class="card-body">
+            <h5>Absent Days</h5>
+            <h3><%= absent %></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <h4 class="mb-3">Detailed Status</h4>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Period</th>
+             <th>Unit</th>
+            <th>Topic</th>
+          </tr>
+        </thead>
+        <tbody>
+  <% attendanceRecords.forEach(att => { %>
+    <tr>
+      <td><%= att.date.toLocaleDateString("en-CA") %></td>
+
+      <td>
+        <% if (att.status === "Present") { %>
+          <span class="badge bg-success">Present</span>
+        <% } else { %>
+          <span class="badge bg-danger">Absent</span>
+        <% } %>
+      </td>
+
+      <td><%= att.period %></td>
+      <td><%= att.unit %></td>
+      <td><%= att.description %></td>
+    </tr>
+  <% }) %>
+</tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

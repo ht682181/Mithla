@@ -1,0 +1,58 @@
+<% layout("layouts/boilerplateTeacher") %>
+
+<div class="container my-3">
+  <div class="card shadow-lg border-0 rounded-4 mt-4">
+    <div class="card-header bg-dark text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">📋 Details</h4>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle text-center">
+          <thead class="table-primary">
+            <tr>
+              <th>Class Name</th>
+              <th>Semester</th>
+              <th>Section</th>
+              <th>Subject</th>
+            </tr>
+          </thead>
+
+       <tbody>
+<% datas.class.forEach(cls => { %>
+
+  <% cls.semesters.forEach(sem => { %>
+
+    <% sem.sections.forEach(sec => { %>
+      <tr>
+        <td><%= cls.className %></td>
+
+        <td>
+          <span class="badge bg-info"><%= sem.semester %></span>
+        </td>
+
+        <td>
+          <span class="badge bg-warning text-dark"><%= sec.section %></span>
+        </td>
+
+        <td>
+          <% sec.subjects.forEach(sub => { %>
+            <span class="badge bg-success me-1"><%= sub %></span>
+          <% }) %>
+        </td>
+      </tr>
+    <% }) %>
+
+  <% }) %>
+
+<% }) %>
+</tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+     

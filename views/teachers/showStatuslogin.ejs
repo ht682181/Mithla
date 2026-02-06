@@ -1,0 +1,138 @@
+<%- layout("/layouts/boilerplateTeacher") -%>
+
+<div class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-7 col-sm-10">
+      <div class="card shadow-lg rounded-4 p-4">
+        <div class="card-body">
+
+          <div class="text-center mb-3">
+            <h3 class="fw-bold text-primary">Show Status</h3>
+            <p class="text-muted">
+              Select class, semester & section 
+            </p>
+          </div>
+
+          <form action="/teacher/show/status"
+                method="post"
+                class="needs-validation"
+                novalidate>
+
+            <!-- CLASS -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Class</label>
+              <select name="data[class]" id="class" class="form-select shadow-sm" required>
+                <option value="">-- Choose Class --</option>
+                <% if (classData?.class?.length) { %>
+                  <% classData.class.forEach(cls => { %>
+                    <option value="<%= cls.className %>">
+                      <%= cls.className %>
+                    </option>
+                  <% }) %>
+                <% } %>
+              </select>
+              <div class="invalid-feedback">Please select class</div>
+            </div>
+
+            <!-- SEMESTER -->
+           <div class="mb-3">
+  <label class="form-label fw-bold">Semester</label>
+  <select name="data[semester]" id="semester" class="form-select shadow-sm" required disabled>
+    <option value="">-- Choose Semester --</option>
+  </select>
+  <div class="invalid-feedback">Please select semester</div>
+</div>
+
+            <!-- SECTION -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Section</label>
+              <select name="data[section]"
+                      id="section"
+                      class="form-select shadow-sm"
+                      required
+                      disabled>
+                <option value="">-- Choose Section --</option>
+              </select>
+              <div class="invalid-feedback">Please select section</div>
+            </div>
+
+            <!-- SUBJECT -->
+            <!-- <div class="mb-3">
+              <label class="form-label fw-bold">Subject</label>
+              <select name="data[subject]"
+                      id="subject"
+                      class="form-select shadow-sm"
+                      required
+                      disabled>
+                <option value="">-- Choose Subject --</option>
+              </select>
+              <div class="invalid-feedback">Please select subject</div>
+            </div> -->
+
+            <!-- SUBMIT -->
+            <div class="text-center mt-4">
+              <button type="submit"
+                      class="btn btn-primary col-6 py-2 rounded-3 shadow-sm">
+                Login
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const classSelect = document.getElementById("class");
+const semesterSelect = document.getElementById("semester");
+const sectionSelect = document.getElementById("section");
+
+// CLASS → SEMESTER
+classSelect.addEventListener("change", async () => {
+  const className = classSelect.value;
+
+  semesterSelect.innerHTML = '<option>Loading...</option>';
+  semesterSelect.disabled = true;
+
+  sectionSelect.innerHTML = '<option value="">-- Choose Section --</option>';
+  sectionSelect.disabled = true;
+
+  if (!className) return;
+
+  const res = await fetch(`/get-semesters?class=${encodeURIComponent(className)}`);
+  const semesters = await res.json();
+
+  semesterSelect.innerHTML = '<option value="">-- Choose Semester --</option>';
+  semesters.forEach(s => {
+    semesterSelect.innerHTML += `<option value="${s}">${s}</option>`;
+  });
+
+  semesterSelect.disabled = false;
+});
+
+// CLASS + SEMESTER → SECTION
+semesterSelect.addEventListener("change", async () => {
+  const className = classSelect.value;
+  const semester = semesterSelect.value;
+
+  sectionSelect.innerHTML = '<option>Loading...</option>';
+  sectionSelect.disabled = true;
+
+  if (!className || !semester) return;
+
+  const res = await fetch(
+    `/get-sections?class=${encodeURIComponent(className)}&semester=${encodeURIComponent(semester)}`
+  );
+  const sections = await res.json();
+
+  sectionSelect.innerHTML = '<option value="">-- Choose Section --</option>';
+  sections.forEach(sec => {
+    sectionSelect.innerHTML += `<option value="${sec}">${sec}</option>`;
+  });
+
+  sectionSelect.disabled = false;
+});
+</script>

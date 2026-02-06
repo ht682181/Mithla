@@ -1,0 +1,129 @@
+<%- layout("/layouts/boilerplateTeacher") -%>
+<div class="container mt-4">
+
+  <!-- Header -->
+  <% if (dupDatas.length > 0 && dupDatas[0].attendance.length > 0) { %>
+    <div class="text-center mb-4">
+      <h4 class="fw-bold text-primary">📅 Attendance Date: <%= dupDatas[0].attendance[dupDatas[0].attendance.length - 1].date.toDateString() %></h4>
+      <p class="text-muted">Attendance for 6 periods</p>
+    </div>
+  <% } %>
+
+
+<div class="container my-5 text-center">
+  <% if (!dupDatas.length || !dupDatas[0]?.studentId) { %>
+    <div class="alert alert-warning">
+      Today Data not available.
+    </div>
+  <% } else { %>
+    <% const student = dupDatas[0].studentId; %>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <div>
+        Class: <span class="badge bg-primary fs-6"><%= student.class %></span>
+      </div>
+      <div>
+        Semester: <span class="badge bg-success fs-6"><%= student.semester %></span>
+      </div>
+      <div>
+        Section: <span class="badge bg-warning text-dark fs-6"><%= student.section %></span>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+
+
+
+  <!-- Table Card -->
+  <div class="card shadow-lg rounded-4 border-0">
+    <div class="card-body p-3">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle mb-0 text-center">
+          <thead class="table-dark rounded-3">
+            <tr>
+              <th class="text-start">Name</th>
+                <th class="text-start">FatherName</th>
+              <th>I</th>
+              <th>II</th>
+              <th>III</th>
+              <th>IV</th>
+              <th>V</th>
+              <th>VI</th>
+            </tr>
+          </thead>
+                   <tbody>
+
+  <% 
+    // 👇 teacher row ke liye reference (sirf ek baar)
+    const teacherRef = dupDatas.find(d => d.attendance && d.attendance.length);
+  %>
+
+  <!-- ===== STUDENTS ATTENDANCE ===== -->
+  <% for (let data of datas) { %>
+
+    <% 
+      let dup = dupDatas.find(
+        d => d.studentId && d.studentId._id.toString() === data._id.toString()
+      ); 
+    %>
+
+    <tr class="align-middle text-center">
+      <td class="fw-bold text-start">
+        <i class="fa-solid fa-user me-2 text-primary"></i><%= data.name %>
+      </td>
+      <td class="text-start"><%= data.fatherName %></td>
+
+      <% for (let i = 0; i < 6; i++) { %>
+        <% if (dup && dup.attendance[i]) { %>
+          <td>
+            <span class="badge <%= dup.attendance[i].status === 'Present' ? 'bg-success' : 'bg-danger' %>">
+              <%= dup.attendance[i].status === 'Present' ? 'Present' : 'Absent' %>
+            </span>
+          </td>
+        <% } else { %>
+          <td class="text-muted">-</td>
+        <% } %>
+      <% } %>
+    </tr>
+
+  <% } %>
+
+  <!-- ===== SINGLE TEACHER ROW (ONLY ONCE) ===== -->
+  <% if (teacherRef) { %>
+    <tr class="bg-light text-center border-top">
+      <td colspan="2" class="fw-semibold text-end text-muted">
+        Teacher →
+      </td>
+
+      <% for (let i = 0; i < 6; i++) { %>
+        <td class="small fw-semibold text-primary">
+          <%= teacherRef.attendance[i]?.teacherName || "-" %>
+        </td>
+      <% } %>
+    </tr>
+  <% } %>
+
+</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script for coloring badges (optional fallback) -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const statusCells = document.querySelectorAll(".status");
+
+    statusCells.forEach(cell => {
+      const text = cell.textContent.trim();
+      if(text === "Present"){
+        cell.style.color = "#fff";
+      } else if(text === "Absent"){
+        cell.style.color = "#fff";
+      } else {
+        cell.style.color = "#6c757d";
+      }
+    });
+  });
+</script>

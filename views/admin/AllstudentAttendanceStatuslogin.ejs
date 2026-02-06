@@ -1,0 +1,74 @@
+ <% layout("/layouts/boilerplate") -%>
+<div class="container my-3">
+
+  <!-- Page Header -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">🎓Check Student Attendance Record</h2>
+  </div>
+
+  
+  <!-- Student Form Card -->
+  <div class="card shadow-lg border-0 rounded-4 bg-light-glass mb-5">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">Select class , semester and section</h4>
+    </div>
+    <div class="card-body p-4">
+      <form method="post" action="/show/allStudent/status" novalidate class="needs-validation" id="passwordForm">
+        
+        <div class="row g-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="class">Class & Year</label>
+           <select name="data[class]" class="form-control shadow-sm" id="class" required>     
+            <option value="">Choose class & year</option>     
+            <% for(let data of classData){ %>       
+              <option value="<%= data.class %>"><%= data.class %></option>     
+            <% } %>   
+          </select> 
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="semester">Semester</label>
+            <select name="data[semester]" class="form-select shadow-sm" id="semester" required>
+              <option value="">Choose semester</option>
+              <% for(let i=1; i<=8; i++){ %>
+                <option value="<%= i %>"><%= i %></option>
+              <% } %>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="section">Section</label>
+            <select name="data[section]" class="form-select shadow-sm" id="section" required>
+              <option value="">Choose section</option>
+               <% for(let data of sectionData){ %>       
+              <option value="<%= data.name %>"><%= data.name %></option>     
+            <% } %>  
+            </select>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-gradient px-5 py-2 rounded-pill shadow-lg" type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- Custom CSS -->
+<style>
+  
+  .bg-light-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+  }
+  .btn-gradient {
+    background: linear-gradient(45deg, #0d6efd, #6610f2);
+    color: #fff;
+    border: none;
+  }
+  .btn-gradient:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+</style>

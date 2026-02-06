@@ -1,0 +1,88 @@
+ <% layout("/layouts/boilerplate") -%>
+
+ <div class="container my-2">
+
+
+   <div class="text-center mb-5">
+    <h1 class="fw-bold text-primary">👩‍🏫 Teacher Management</h1>
+    <p class="text-muted">Add, Search & Manage Teacher Information</p>
+  </div>
+
+<div class="card shadow-lg border-0 rounded-4 p-4 bg-body-tertiary">
+  <div class="text-center mt-2">
+    <h3 class="fw-bold text-secondary mb-3">🔍 Search Teacher</h3>
+    <form action="/search/teacher" method="POST" class="d-flex justify-content-center">
+      <input type="text" name="search" class="form-control w-50 me-2 rounded-pill shadow-sm" placeholder="Search by name..." required>
+      <button type="submit" class="btn btn-dark rounded-pill px-4 shadow-sm">Search</button>
+    </form>
+  </div>
+  </div>
+
+  <a href= "/add/teacherData" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-5 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Add Teacher
+</a>
+
+<a href= "/assign/teacher/subject/class" 
+   class="btn btn-dark shadow-sm px-4 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2 mt-5 mb-0"
+   style="transition:0.3s; font-size:15px;">
+   <i class="fa-solid fa-plus"></i> Assigning
+</a>
+
+  <div class="card shadow-lg border-0 rounded-4 mt-5">
+    <div class="card-header bg-dark text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">📋 Teacher Details</h4>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle text-center shadow-sm">
+          <thead class="table-primary">
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Edit</th>
+              <th>Delete</th>
+               <th>Subject&Class</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let data of datas) { %>
+              <tr>
+
+                <td><a href="/teacher/profile/<%= data._id %>" style="color: black; text-decoration: none;"><%= data.name %></a></td>
+                  <td><%=data.username%></td>
+                <td><%= data.email %></td>
+                <td><%= data.mobile %></td>
+                <td>
+
+                   <!-- edit -->
+                  <a href="/edit/teacher/<%= data._id %>" class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-pen"></i></a></td>
+                <td>
+
+                    <!-- delete    -->
+                  <form action="/delete/teacher/<%= data._id %>?_method=Delete" method="post" style="display:inline;">
+                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </td>
+
+    
+               
+
+                 <td>
+                 <form action="/show/teacher/class/<%= data._id %>" method="get">
+                    <button class="btn btn-sm btn-outline-secondary">View</button>
+                  </form>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

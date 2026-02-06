@@ -1,0 +1,67 @@
+<% layout("/layouts/boilerplate") -%>
+
+
+
+<div class="container my-3">
+
+  <div class="card shadow-lg border-0 rounded-4 bg-light-glass mb-5">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0 fw-bold text-center">Edit Teacher</h4>
+    </div>
+    <div class="card-body p-4">
+    <form action="/edit/teacher/<%= id %>?_method=put" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Name</label>
+            <input name="data[name]" class="form-control shadow-sm" placeholder="Enter name" required value="<%= data.name %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="data[email]" class="form-control shadow-sm" placeholder="Enter email" required value="<%= data.email %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Username</label>
+            <input name="data[username]" class="form-control shadow-sm" placeholder="Enter username" required value="<%= data.username %>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" name="data[password]" class="form-control shadow-sm" placeholder="Create strong password">
+          </div>
+              <div class="col-md-6">
+            <label for="image" class="form-label fw-semibold">image</label>
+            <input type="file" id="image" name="data[image]" class="form-control shadow-sm" placeholder="Choose a image">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Contact</label>
+            <input type="text" name="data[mobile]" class="form-control shadow-sm" placeholder="Enter mobile no." value="<%= data.mobile %>" required>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-gradient px-5 py-2 rounded-pill shadow-lg">Edit Teacher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  </div>
+
+<style>
+  
+  
+  .bg-light-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+  }
+  .btn-gradient {
+    background: linear-gradient(45deg, #0d6efd, #6610f2);
+    color: #fff;
+    border: none;
+  }
+  .btn-gradient:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+</style>
+

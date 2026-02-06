@@ -1,0 +1,163 @@
+<% layout("/layouts/boilerplate") -%>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+
+      <div class="profile-shell">
+ <div class="card-header p-0 position-relative" style="height:120px; background: linear-gradient(135deg, #6c63ff, #42a5f5); border-top-left-radius:16px; border-top-right-radius:16px;">
+          <div class="position-absolute top-50 start-50 translate-middle text-center">
+           <img src="<%= student.image.url %>"
+                 alt="Profile Picture" 
+                 class="rounded-circle border border-white" 
+                 width="120" 
+                 height="120" 
+                 style="object-fit: cover;">
+          </div>
+        </div>
+        <!-- Top -->
+        <div class="profile-top">
+          <h4><%= student.name %></h4>
+          <p>Admin No • <%= student.rollNo %></p>
+        </div>
+
+        
+
+
+        <!-- Stats -->
+        <div class="stats">
+          <div>
+            <span>Class</span>
+            <b><%= student.class %></b>
+          </div>
+          <div>
+            <span>Section</span>
+            <b><%= student.section %></b>
+          </div>
+          <div>
+            <span>Semester</span>
+            <b><%= student.semester %></b>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="details">
+          <div><span>Father Name</span><b><%= student.fatherName %></b></div>
+          <div><span>Session</span><b><%= student.session %></b></div>
+          <div><span>Email</span><b><%= student.email %></b></div>
+        </div>
+
+        <div class="action">
+          <a href="/edit/student/<%= student._id %>">Edit Profile</a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<style>
+    body {
+  background: #f2f4f8;
+}
+
+/* Shell */
+.profile-shell {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* Top */
+.profile-top {
+  text-align: center;
+  padding: 35px 20px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-top h4 {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.profile-top p {
+  font-size: 13px;
+  color: #777;
+}
+
+/* Stats row (social app feel) */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 18px 10px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+}
+
+.stats div {
+  text-align: center;
+}
+
+.stats span {
+  font-size: 12px;
+  color: #777;
+}
+
+.stats b {
+  display: block;
+  font-size: 14px;
+}
+
+/* Details */
+.details {
+  padding: 20px 30px;
+}
+
+.details div {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.details span {
+  color: #777;
+}
+
+/* Action */
+.action {
+  text-align: center;
+  padding: 25px;
+}
+
+.action a {
+  padding: 10px 30px;
+  border-radius: 25px;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.action a:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+</style>

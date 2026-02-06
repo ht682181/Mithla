@@ -1,0 +1,78 @@
+body{
+      /* font-family: "Plus Jakarta Sans", sans-serif !important; */
+        font-family: 'Courier New', Courier, monospace !important;
+        font-weight: bold !important;
+    background-color: whitesmoke !important;
+}
+
+
+/* navbar/ */
+ .nav-bar{
+    background-color: white !important;
+  padding-bottom: 100px;
+  }
+.navbar-toggler {
+  color: white !important;
+}
+
+.navbar-toggler:after {
+    content: '☰'; 
+    font-size: 24px; 
+    color:black; 
+}
+.offcanvas{
+  width: 270px !important;
+}
+
+.nav-items{
+     
+  font-weight: 900 !important;
+}
+
+.nav-line{
+    word-spacing: 3px;
+}
+.logo{
+  width: 50px;
+  height: 60px;
+  border-radius: 50%;
+  margin-left: 10px;
+  
+}
+
+/* login.ej */
+
+ .login-box{
+   height: auto;
+  background-color: white;
+  border-radius: 10px;
+   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 11px 8px rgba(0, 0, 0, 0.2);
+}
+
+input{
+    height:40px;
+         font-family: Arial, Helvetica, sans-serif;
+
+}
+input:placeholder-shown{
+    font-size: 12px;
+}
+
+
+/* flash */
+
+.word-space
+{
+  word-spacing:3px;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-weight: 900;
+}
+
+.heading{
+  
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-spacing: 6px;
+}

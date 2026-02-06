@@ -1,0 +1,165 @@
+<%- layout("/layouts/boilerplate") -%>
+
+<div class="container mt-4">
+
+  <!-- ================= HEADER ================= -->
+  <h3 class="mb-3 text-center fw-bold">
+    📊 Attendance Report
+  </h3>
+
+  <div class="container my-5 text-center">
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <div>
+        Class: <span class="badge bg-primary fs-6"><%= className %></span>
+      </div>
+      <div>
+        Semester: <span class="badge bg-success fs-6"><%= semester %></span>
+      </div>
+      <div>
+        Section: <span class="badge bg-warning text-dark fs-6"><%= section %></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FILTER + PDF ================= -->
+  <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+    <button class="btn btn-outline-primary filter-btn" data-filter="all">All</button>
+    <button class="btn btn-outline-primary filter-btn" data-filter="monthly">Monthly</button>
+    <button class="btn btn-outline-primary filter-btn" data-filter="weekly">Weekly</button>
+    <button class="btn btn-outline-primary filter-btn" data-filter="today">Today</button>
+
+    <button class="btn btn-danger ms-2" id="downloadPdf">
+      📄 Download PDF
+    </button>
+  </div>
+
+  <!-- ================= TABLE ================= -->
+  <div class="table-responsive">
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Admin No</th>
+          <th>Name</th>
+          <th>FatherName</th>
+          <th>Present Days</th>
+          <th>Total Days</th>
+          <th>Present Periods</th>
+          <th>Total Periods</th>
+          <th>%</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody id="statusTableBody">
+        <% if (!report.length) { %>
+          <tr>
+            <td colspan="8">No data found</td>
+          </tr>
+        <% } %>
+
+        <% report.forEach(r => { %>
+          <tr>
+            <td><%= r.rollNo %></td>
+            <td>
+              <a href="/student/status/<%= r.rollNo %>" style="color:black;text-decoration:none;">
+                <%= r.name %>
+              </a>
+            </td>
+            <td><%= r.fatherName %></td>
+            <td><%= r.presentDays %></td>
+            <td><%= r.totalDays %></td>
+            <td><%= r.presentPeriods %></td>
+            <td><%= r.totalPeriods %></td>
+            <td><%= r.percentage %>%</td>
+            <td>
+              <% if (r.status === "GOOD") { %>
+                <span class="badge bg-success">🟢 Good</span>
+              <% } else if (r.status === "WARNING") { %>
+                <span class="badge bg-warning text-dark">🟡 Warning</span>
+              <% } else { %>
+                <span class="badge bg-danger">🔴 Short</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  const className = "<%= className %>";
+  const semester = "<%= semester %>";
+  const section = "<%= section %>";
+
+  let currentFilter = "all";
+
+  async function loadStatus(filter) {
+    try {
+      const res = await fetch("/show/allStudent/status/filter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          class: className,
+          semester,
+          section,
+          filter
+        })
+      });
+
+      const data = await res.json();
+      const tbody = document.getElementById("statusTableBody");
+      tbody.innerHTML = "";
+
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="8">No data found</td></tr>`;
+        return;
+      }
+
+      data.forEach(r => {
+        let badge =
+          r.status === "GOOD"
+            ? `<span class="badge bg-success">🟢 Good</span>`
+            : r.status === "WARNING"
+            ? `<span class="badge bg-warning text-dark">🟡 Warning</span>`
+            : `<span class="badge bg-danger">🔴 Short</span>`;
+
+        tbody.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${r.rollNo}</td>
+            <td>${r.name}</td>
+             <td>${r.fatherName}</td>
+            <td>${r.presentDays}</td>
+            <td>${r.totalDays}</td>
+            <td>${r.presentPeriods}</td>
+            <td>${r.totalPeriods}</td>
+            <td>${r.percentage}%</td>
+            <td>${badge}</td>
+          </tr>
+        `);
+      });
+    } catch (err) {
+      console.error("Status filter error", err);
+    }
+  }
+
+  // 🔹 Filter buttons
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentFilter = btn.dataset.filter;
+      loadStatus(currentFilter);
+    });
+  });
+
+  // 🔹 PDF Button (UNCHANGED)
+  document.getElementById("downloadPdf").addEventListener("click", () => {
+    const url =
+      `/show/allStudent/status/pdf?class=${className}` +
+      `&semester=${semester}` +
+      `&section=${section}` +
+      `&filter=${currentFilter}`;
+
+    window.open(url, "_blank");
+  });
+</script>

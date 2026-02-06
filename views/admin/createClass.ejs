@@ -1,0 +1,132 @@
+<% layout("/layouts/boilerplate") -%>
+
+<div class="container my-5">
+
+
+  <!-- Heading -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-primary">📘 Add Class</h2>
+    <p class="text-muted mb-0">Add & manage class and academic year</p>
+  </div>
+   
+   <!-- Show Class Link (Container Start) -->
+  <div class="mb-3 text-center me-5">
+    <a href="/show/class"
+      class="btn btn-dark rounded-pill shadow-sm px-4 py-2 fw-semibold">
+      <i class="fa-solid fa-eye"></i> Show Classes
+    </a>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 col-sm-10">
+
+      <!-- Card -->
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4 p-md-5">
+
+          <form action="/add/class" method="post" novalidate class="needs-validation">
+
+            <!-- Input -->
+            <div class="mb-3">
+              <label for="courseYear" class="form-label fw-semibold">
+                Select Class & Year
+              </label>
+
+              <input
+                id="courseYear"
+                name="data[class]"
+                class="form-control form-control-lg shadow-sm"
+                required
+                placeholder="e.g. BCA 1ST YEAR"
+                list="classList"
+              />
+
+              <div class="invalid-feedback">
+                Please enter a valid class
+              </div>
+            </div>
+
+            <!-- Format Info -->
+            <div class="alert alert-info small mt-3">
+              <strong>Format:</strong><br>
+              B.TECH CSE 1ST YEAR · BCA 2ND YEAR · DIPLOMA 1ST YEAR · B.SC 1ST YEAR  
+              <br>
+              <span class="fw-bold text-danger">WRITE IN UPPERCASE</span>
+            </div>
+
+            <!-- Button -->
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary btn-lg rounded-pill shadow">
+                💾 Save Class
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Datalist -->
+<datalist id="classList">
+  <!-- B.TECH -->
+  <option value="B.TECH CSE 1ST YEAR">
+  <option value="B.TECH CSE 2ND YEAR">
+  <option value="B.TECH CSE 3RD YEAR">
+  <option value="B.TECH CSE 4TH YEAR">
+  <option value="B.TECH EEE 1ST YEAR">
+
+  <!-- BCA -->
+  <option value="BCA 1ST YEAR">
+  <option value="BCA 2ND YEAR">
+  <option value="BCA 3RD YEAR">
+
+  <!-- BBA -->
+  <option value="BBA 1ST YEAR">
+  <option value="BBA 2ND YEAR">
+  <option value="BBA 3RD YEAR">
+
+  <!-- B.SC -->
+  <option value="B.SC 1ST YEAR">
+  <option value="B.SC 2ND YEAR">
+  <option value="B.SC 3RD YEAR">
+
+  <!-- M.SC -->
+  <option value="M.SC 1ST YEAR">
+  <option value="M.SC 2ND YEAR">
+
+  <!-- MCA -->
+  <option value="MCA 1ST YEAR">
+  <option value="MCA 2ND YEAR">
+
+  <!-- MBA -->
+  <option value="MBA 1ST YEAR">
+  <option value="MBA 2ND YEAR">
+
+  <!-- DIPLOMA -->
+  <option value="DIPLOMA 1ST YEAR">
+  <option value="DIPLOMA 2ND YEAR">
+  <option value="DIPLOMA 3RD YEAR">
+
+  <!-- BA -->
+  <option value="BA 1ST YEAR">
+  <option value="BA 2ND YEAR">
+  <option value="BA 3RD YEAR">
+
+  <!-- MA -->
+  <option value="MA 1ST YEAR">
+  <option value="MA 2ND YEAR">
+
+  <!-- ITI -->
+  <option value="ITI 1ST YEAR">
+  <option value="ITI 2ND YEAR">
+
+  <!-- POLYTECHNIC -->
+  <option value="POLYTECHNIC 1ST YEAR">
+  <option value="POLYTECHNIC 2ND YEAR">
+  <option value="POLYTECHNIC 3RD YEAR">
+</datalist>

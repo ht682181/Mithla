@@ -1,0 +1,40 @@
+<% layout("/layouts/boilerplateTeacher") -%>
+
+<div class="container">
+    <div class="row">
+          <div class="col-lg-6 mx-auto login-box p-4">
+
+            <form action="/teacher/profile/edit/<%= id %>?_method=put" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
+    <div class="text-center">
+    <h4 class="fw-bold">Edit Profile</h4>
+    </div>
+    
+
+           <!-- <div class="mb-2">
+              <label for="email" class="form-label">Email</label>
+
+              <input name="data[email]" class="form-control" id="email" placeholder="Enter the email" type="email"
+                required value="<%= data.email %>">
+            </div> -->
+
+   <!-- <div class="mb-3">
+            <label for="contact" class="form-label">Contact</label>
+
+            <input name="data[mobile]" class="form-control" id="contact" placeholder="Enter the mobile.no" type="number"
+              required value="<%= data.mobile %>">
+          </div> -->
+
+          <div class="mb-3">
+            <label for="image" class="form-label fw-semibold">image</label>
+            <input type="file" id="image" name="data[image]" class="form-control shadow-sm" placeholder="Choose a image">
+          </div>
+
+    <div class="text-center mt-3">
+    <button class="col-6 btn btn-primary">Edit</button>
+    </div>
+</form>
+
+</div>
+
+    </div>
+</div>

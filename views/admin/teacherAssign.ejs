@@ -1,0 +1,133 @@
+<% layout("/layouts/boilerplate") -%>
+
+<div class="container my-3">
+
+  <!-- Heading -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-primary">👩‍🏫 Assigning Teacher Management</h2>
+    <p class="text-muted">Assign class, semester, section & subject to teacher</p>
+  </div>
+
+  <!-- Top Links -->
+  <div class="mb-3">
+    <a href="/add/teacherData"
+      class="btn btn-dark rounded-pill shadow-sm px-4 py-2 fw-semibold me-2">
+      <i class="fa-solid fa-plus"></i> Add Teacher
+    </a>
+
+    <a href="/show/teacher"
+      class="btn btn-dark rounded-pill shadow-sm px-4 py-2 fw-semibold">
+      <i class="fa-solid fa-eye"></i> Show Teacher
+    </a>
+  </div>
+
+  <!-- Card -->
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h5 class="mb-0 fw-bold text-center">
+        Assign Subject, Class, Semester & Section
+      </h5>
+    </div>
+
+    <div class="card-body p-4">
+
+      <form action="/assign/teacher/subject/class" method="post" novalidate class="needs-validation">
+
+        <div class="row g-3">
+
+          <!-- Teacher -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Teacher Username</label>
+            <select name="data[username]" class="form-select shadow-sm" required>
+              <option value="">Choose teacher</option>
+              <% for(let t of teacherData){ %>
+                <option value="<%= t.username %>"><%= t.username %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <!-- Class -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Class</label>
+            <select name="data[className]" class="form-select shadow-sm" id="class" required>
+              <option value="">Choose class</option>
+              <% for(let c of classData){ %>
+                <option value="<%= c.class %>"><%= c.class %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <!-- Semester -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Semester</label>
+            <select name="data[semester]" class="form-select shadow-sm" id="semester" required>
+              <option value="">Choose semester</option>
+              <% for(let i=1;i<=8;i++){ %>
+                <option value="<%= i %>"><%= i %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <!-- Section -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Section</label>
+            <select name="data[section]" class="form-select shadow-sm" required>
+              <option value="">Choose section</option>
+              <% for(let s of sectionData){ %>
+                <option value="<%= s.name %>"><%= s.name %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <!-- Subject -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Subject</label>
+            <select name="data[subject]" class="form-select shadow-sm" id="subject" required>
+              <option value="">Choose subject</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-primary px-5 py-2 rounded-pill shadow-lg">
+            💾 Assign
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  document.getElementById("class").addEventListener("change", loadSubjects);
+  document.getElementById("semester").addEventListener("change", loadSubjects);
+
+  async function loadSubjects() {
+    const className = document.getElementById("class").value;
+    const semester = document.getElementById("semester").value;
+    const subjectSelect = document.getElementById("subject");
+
+    subjectSelect.innerHTML = `<option value="">Choose subject</option>`;
+
+    if (!className || !semester) return;
+
+    try {
+      const res = await fetch(`/get-subjects/${className}/${semester}`);
+      const subjects = await res.json();
+
+      subjects.forEach(sub => {
+        const opt = document.createElement("option");
+        opt.value = sub.name;
+        opt.textContent = sub.name;
+        subjectSelect.appendChild(opt);
+      });
+
+    } catch (err) {
+      console.error("Subject load error", err);
+    }
+  }
+</script>
