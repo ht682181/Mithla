@@ -2067,7 +2067,7 @@ app.post(
     // ================= STUDENT TABLE =================
     const studentTable = {
       headers: [
-        "Roll",
+        "Adm no",
         "Name",
         "Father Name",
         "I", "II", "III", "IV", "V", "VI"
@@ -2633,16 +2633,16 @@ app.get(
     let y = doc.y;
     doc.fontSize(10).font("Helvetica-Bold");
 
-    doc.text("Adm.no", 40, y);
-    doc.text("Name", 90, y);
-     doc.text("FatherName", 130, y);
+   doc.text("Adm.no", 40, y);
+    doc.text("Name", 110, y);
+     doc.text("FatherName", 200, y);
 
-    doc.text("P Days", 230, y);
-    doc.text("T Days", 280, y);
-    doc.text("P Per.", 330, y);
-    doc.text("T Per.", 380, y);
-    doc.text("%", 430, y);
-    doc.text("Status", 470, y);
+    doc.text("P Days", 310, y);
+    doc.text("T Days", 350, y);
+    doc.text("P Per.", 390, y);
+    doc.text("T Per.", 430, y);
+    doc.text("%", 470, y);
+    doc.text("Status", 510, y);
 
     doc.moveDown(0.3);
     doc.font("Helvetica").moveTo(40, doc.y).lineTo(550, doc.y).stroke();
@@ -2654,15 +2654,16 @@ app.get(
 
       doc.text(r.rollNo, 40, rowY);
       doc.text(r.name, 90, rowY);
-      doc.text(r.fatherName, 130, rowY);
-      doc.text(r.presentDays, 240, rowY);
-      doc.text(r.totalDays, 290, rowY);
-      doc.text(r.presentPeriods, 340, rowY);
-      doc.text(r.totalPeriods, 390, rowY);
-      doc.text(`${r.percentage}%`, 430, rowY);
-      doc.text(r.status, 470, rowY);
+      doc.text(r.fatherName, 200, rowY);
+      doc.text(r.presentDays, 320, rowY);
+      doc.text(r.totalDays, 360, rowY);
+      doc.text(r.presentPeriods, 400, rowY);
+      doc.text(r.totalPeriods, 440, rowY);
+      doc.text(`${r.percentage}%`, 470, rowY);
+      doc.text(r.status, 510, rowY);
 
       doc.moveDown(0.6);
+
 
       if (doc.y > 750) doc.addPage();
     });
